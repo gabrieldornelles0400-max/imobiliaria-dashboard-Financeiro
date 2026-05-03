@@ -1745,6 +1745,7 @@ function buildMonthTabs() {
       // ao clicar no mês, limpa o filtro de período
       clearDateFilter();
       buildMonthTabs();
+      populateMesSelects();
       renderAll();
     };
     cont.appendChild(div);
@@ -1965,7 +1966,7 @@ function getMonthData(m, y) {
     vendas: (yd.vendas||[]).filter(v => v.mes == m),
     alugueis: (yd.alugueis||[]).filter(a => a.mes == m),
     despVariaveis: (yd.despVariaveis||[]).filter(d => d.mes == m),
-    despFixas: yd.despFixas||[]
+    despFixas: getFixasDoMes(yd, m)  // snapshot correto do mês
   };
 }
  
@@ -1985,8 +1986,7 @@ function calcMonthTotals(m, y) {
   const despVarTotal = d.despVariaveis.reduce((s,v) => s + (v.valor||0), 0);
   // totalDesp inclui: fixas + variáveis lançadas + impostos NF + custos variáveis de venda
   const totalDesp = despFixasTotal + despVarTotal + impostosTotal + custosVendas;
-  // despSemImpostos: base para dedução dos sócios — impostos NF já foram descontados no valA/valB
-  // (imposto é retido na fonte, não sai do caixa de distribuição dos sócios)
+  // despSemImpostos: para dedução dos sócios — impostos já retidos na fonte
   const despSemImpostos = despFixasTotal + despVarTotal + custosVendas;
   const liquido = receitaBruta - totalDesp;
   return {receitaBruta, receitaVendas, receitaAlugueis, despFixasTotal, despVarTotal, impostosTotal, custosVendas, totalDesp, despSemImpostos, liquido};
@@ -2181,8 +2181,7 @@ function renderSocioMensalPanel(d, t, isPeriod, period) {
     }
   });
  
-  // Deduz 50% das despesas SEM impostos NF (impostos já foram retidos na fonte,
-  // já estão descontados no valA/valB — deduzir de novo seria dupla contagem)
+  // Deduz 50% SEM impostos NF (já retidos na fonte, já descontados no valA/valB)
   const deducaoSocio = (t.despSemImpostos !== undefined ? t.despSemImpostos : t.totalDesp) / 2;
   socioATotal = Math.max(0, aBrutoTotal - deducaoSocio);
   socioBTotal = Math.max(0, bBrutoTotal - deducaoSocio);
@@ -2204,9 +2203,9 @@ function renderSocioMensalPanel(d, t, isPeriod, period) {
     </div>`;
   });
  
-  const baseDedStr = t.despSemImpostos !== undefined ? fmt(t.despSemImpostos) : fmt(t.totalDesp);
+  const _baseDed = t.despSemImpostos !== undefined ? t.despSemImpostos : t.totalDesp;
   const deducaoNote = deducaoSocio > 0
-    ? `<div style="font-size:10px;color:var(--text3);margin-top:8px;padding:6px 10px;background:var(--bg3);border-radius:6px;border-left:2px solid var(--border2);">⚡ Dedução de despesas: cada sócio absorve <strong style="color:var(--red)">−${fmt(deducaoSocio)}</strong> (50% de ${baseDedStr} em despesas — impostos NF excluídos, pois já foram retidos na fonte)</div>`
+    ? `<div style="font-size:10px;color:var(--text3);margin-top:8px;padding:6px 10px;background:var(--bg3);border-radius:6px;border-left:2px solid var(--border2);">⚡ Dedução: cada sócio absorve <strong style="color:var(--red)">−${fmt(deducaoSocio)}</strong> (50% de ${fmt(_baseDed)} — fixas + variáveis, sem impostos NF)</div>`
     : '';
  
   panel.innerHTML = `
@@ -2324,7 +2323,7 @@ function renderAnual() {
       (yd.alugueis || []).forEach(al => {
         if (al.mes === mi) { a += al.valA || 0; b += al.valB || 0; if (al.nomeA) socioANome = al.nomeA; if (al.nomeB) socioBNome = al.nomeB; }
       });
-      // Deduz 50% das despesas SEM impostos NF (impostos já estão descontados no valA/valB)
+      // Deduz 50% SEM impostos NF (já retidos na fonte)
       const _totMes = calcMonthTotals(mi, curY);
       const despMes = _totMes.despSemImpostos !== undefined ? _totMes.despSemImpostos : _totMes.totalDesp;
       const deducaoSocio = despMes / 2;
@@ -3595,7 +3594,6 @@ function atualizarPreview() {
     const rows = [];
     data.vendas.forEach(v => { const a=v.valA||0,b=v.valB||0; if(a>0||b>0){aBruto+=a;bBruto+=b;rows.push({label:v.descricao,tipo:'Venda',mes:mesLabel(v),a,b});} });
     data.alugueis.forEach(al => { const a=al.valA||0,b=al.valB||0; if(a>0||b>0){aBruto+=a;bBruto+=b;rows.push({label:al.descricao,tipo:'Aluguel',mes:mesLabel(al),a,b});} });
-    // Impostos NF já retidos na fonte — excluir da base de dedução dos sócios
     const despParaSocios = despFix + despVar + custosV;
     const deducao = despParaSocios / 2;
     const aLiq = Math.max(0, aBruto - deducao);
@@ -3619,7 +3617,7 @@ function atualizarPreview() {
       </div>
     </div>
     <div style="padding:6px 14px 4px;font-size:10px;color:var(--text3);background:var(--bg3);border-top:1px solid var(--border);">
-      ⚡ Dedução de <strong style="color:var(--red)">${fmt(deducao)}</strong> por sócio (50% de ${fmt(despParaSocios)} em despesas — impostos NF excluídos, já retidos na fonte)
+      ⚡ Dedução de <strong style="color:var(--red)">${fmt(deducao)}</strong> por sócio (50% de ${fmt(despParaSocios)} — fixas + variáveis, sem impostos NF)
     </div>`;
     if (rows.length > 0) {
       linhas += `<div class="extrato-thead" style="margin-top:0;"><div style="flex:1">Item</div><div style="width:60px">Tipo</div><div style="width:110px;text-align:right;color:var(--green)">${getSocioA()}</div><div style="width:110px;text-align:right;color:var(--blue)">${getSocioB()}</div></div>`;
@@ -4008,7 +4006,7 @@ function gerarPDF() {
       const va=a.valA||0, vb=a.valB||0;
       if (va>0||vb>0) { aTot+=va; bTot+=vb; splitRows.push([a.descricao,'Aluguel',MONTHS[a.mes],fmt(va),fmt(vb)]); }
     });
-    const despParaSociosPDF = despFix + despVar + custosV; // sem impostos NF
+    const despParaSociosPDF = despFix + despVar + custosV;
     const deducaoTotal = despParaSociosPDF / 2;
     const aLiq = Math.max(0, aTot - deducaoTotal);
     const bLiq = Math.max(0, bTot - deducaoTotal);
@@ -4017,7 +4015,7 @@ function gerarPDF() {
       {label:getSocioA()+' (líquido)', value:fmt(aLiq), color:GREEN},
       {label:getSocioB()+' (líquido)', value:fmt(bLiq), color:BLUE},
       {label:'Escritório Total', value:fmt(aLiq+bLiq), color:GOLD},
-      {label:'Dedução s/ impostos', value:'-'+fmt(deducaoTotal), color:RED}
+      {label:'Dedução (50% desp.)', value:'-'+fmt(deducaoTotal), color:RED}
     ], y);
     y += 3;
     if (splitRows.length > 0) {
@@ -4072,3 +4070,4 @@ init().catch(console.error);
 </script>
 </body>
 </html>
+ 
