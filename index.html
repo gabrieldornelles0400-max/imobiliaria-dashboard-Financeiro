@@ -1920,8 +1920,9 @@ function getPeriodTotals() {
  
   const receitaBruta = receitaVendas + receitaAlugueis;
   const totalDesp = despFixasTotal + despVarTotal + impostosTotal + custosVendas;
+  const despSemImpostos = despFixasTotal + despVarTotal + custosVendas;
   const liquido = receitaBruta - totalDesp;
-  return { receitaBruta, receitaVendas, receitaAlugueis, despFixasTotal, despVarTotal, impostosTotal, custosVendas, totalDesp, liquido, months, start, end };
+  return { receitaBruta, receitaVendas, receitaAlugueis, despFixasTotal, despVarTotal, impostosTotal, custosVendas, totalDesp, despSemImpostos, liquido, months, start, end };
 }
  
 function getPeriodData() {
@@ -1984,8 +1985,11 @@ function calcMonthTotals(m, y) {
   const despVarTotal = d.despVariaveis.reduce((s,v) => s + (v.valor||0), 0);
   // totalDesp inclui: fixas + variáveis lançadas + impostos NF + custos variáveis de venda
   const totalDesp = despFixasTotal + despVarTotal + impostosTotal + custosVendas;
+  // despSemImpostos: base para dedução dos sócios — impostos NF já foram descontados no valA/valB
+  // (imposto é retido na fonte, não sai do caixa de distribuição dos sócios)
+  const despSemImpostos = despFixasTotal + despVarTotal + custosVendas;
   const liquido = receitaBruta - totalDesp;
-  return {receitaBruta, receitaVendas, receitaAlugueis, despFixasTotal, despVarTotal, impostosTotal, custosVendas, totalDesp, liquido};
+  return {receitaBruta, receitaVendas, receitaAlugueis, despFixasTotal, despVarTotal, impostosTotal, custosVendas, totalDesp, despSemImpostos, liquido};
 }
  
 // ============================================================
@@ -2177,8 +2181,9 @@ function renderSocioMensalPanel(d, t, isPeriod, period) {
     }
   });
  
-  // Deduz 50% das despesas totais do período de cada sócio
-  const deducaoSocio = t.totalDesp / 2;
+  // Deduz 50% das despesas SEM impostos NF (impostos já foram retidos na fonte,
+  // já estão descontados no valA/valB — deduzir de novo seria dupla contagem)
+  const deducaoSocio = (t.despSemImpostos !== undefined ? t.despSemImpostos : t.totalDesp) / 2;
   socioATotal = Math.max(0, aBrutoTotal - deducaoSocio);
   socioBTotal = Math.max(0, bBrutoTotal - deducaoSocio);
  
@@ -2199,8 +2204,9 @@ function renderSocioMensalPanel(d, t, isPeriod, period) {
     </div>`;
   });
  
+  const baseDedStr = t.despSemImpostos !== undefined ? fmt(t.despSemImpostos) : fmt(t.totalDesp);
   const deducaoNote = deducaoSocio > 0
-    ? `<div style="font-size:10px;color:var(--text3);margin-top:8px;padding:6px 10px;background:var(--bg3);border-radius:6px;border-left:2px solid var(--border2);">⚡ Dedução de despesas: cada sócio absorve <strong style="color:var(--red)">−${fmt(deducaoSocio)}</strong> (50% de ${fmt(t.totalDesp)} em despesas do mês)</div>`
+    ? `<div style="font-size:10px;color:var(--text3);margin-top:8px;padding:6px 10px;background:var(--bg3);border-radius:6px;border-left:2px solid var(--border2);">⚡ Dedução de despesas: cada sócio absorve <strong style="color:var(--red)">−${fmt(deducaoSocio)}</strong> (50% de ${baseDedStr} em despesas — impostos NF excluídos, pois já foram retidos na fonte)</div>`
     : '';
  
   panel.innerHTML = `
@@ -2318,8 +2324,9 @@ function renderAnual() {
       (yd.alugueis || []).forEach(al => {
         if (al.mes === mi) { a += al.valA || 0; b += al.valB || 0; if (al.nomeA) socioANome = al.nomeA; if (al.nomeB) socioBNome = al.nomeB; }
       });
-      // Deduz 50% das despesas totais do mês de cada sócio
-      const despMes = calcMonthTotals(mi, curY).totalDesp;
+      // Deduz 50% das despesas SEM impostos NF (impostos já estão descontados no valA/valB)
+      const _totMes = calcMonthTotals(mi, curY);
+      const despMes = _totMes.despSemImpostos !== undefined ? _totMes.despSemImpostos : _totMes.totalDesp;
       const deducaoSocio = despMes / 2;
       const aLiq = Math.max(0, a - deducaoSocio);
       const bLiq = Math.max(0, b - deducaoSocio);
@@ -3588,7 +3595,9 @@ function atualizarPreview() {
     const rows = [];
     data.vendas.forEach(v => { const a=v.valA||0,b=v.valB||0; if(a>0||b>0){aBruto+=a;bBruto+=b;rows.push({label:v.descricao,tipo:'Venda',mes:mesLabel(v),a,b});} });
     data.alugueis.forEach(al => { const a=al.valA||0,b=al.valB||0; if(a>0||b>0){aBruto+=a;bBruto+=b;rows.push({label:al.descricao,tipo:'Aluguel',mes:mesLabel(al),a,b});} });
-    const deducao = totalDesp / 2;
+    // Impostos NF já retidos na fonte — excluir da base de dedução dos sócios
+    const despParaSocios = despFix + despVar + custosV;
+    const deducao = despParaSocios / 2;
     const aLiq = Math.max(0, aBruto - deducao);
     const bLiq = Math.max(0, bBruto - deducao);
     let linhas = '';
@@ -3610,7 +3619,7 @@ function atualizarPreview() {
       </div>
     </div>
     <div style="padding:6px 14px 4px;font-size:10px;color:var(--text3);background:var(--bg3);border-top:1px solid var(--border);">
-      ⚡ Dedução de <strong style="color:var(--red)">${fmt(deducao)}</strong> por sócio (50% de ${fmt(totalDesp)} em despesas do período)
+      ⚡ Dedução de <strong style="color:var(--red)">${fmt(deducao)}</strong> por sócio (50% de ${fmt(despParaSocios)} em despesas — impostos NF excluídos, já retidos na fonte)
     </div>`;
     if (rows.length > 0) {
       linhas += `<div class="extrato-thead" style="margin-top:0;"><div style="flex:1">Item</div><div style="width:60px">Tipo</div><div style="width:110px;text-align:right;color:var(--green)">${getSocioA()}</div><div style="width:110px;text-align:right;color:var(--blue)">${getSocioB()}</div></div>`;
@@ -3999,7 +4008,8 @@ function gerarPDF() {
       const va=a.valA||0, vb=a.valB||0;
       if (va>0||vb>0) { aTot+=va; bTot+=vb; splitRows.push([a.descricao,'Aluguel',MONTHS[a.mes],fmt(va),fmt(vb)]); }
     });
-    const deducaoTotal = totalDesp / 2;
+    const despParaSociosPDF = despFix + despVar + custosV; // sem impostos NF
+    const deducaoTotal = despParaSociosPDF / 2;
     const aLiq = Math.max(0, aTot - deducaoTotal);
     const bLiq = Math.max(0, bTot - deducaoTotal);
     // Summary cards
@@ -4007,7 +4017,7 @@ function gerarPDF() {
       {label:getSocioA()+' (líquido)', value:fmt(aLiq), color:GREEN},
       {label:getSocioB()+' (líquido)', value:fmt(bLiq), color:BLUE},
       {label:'Escritório Total', value:fmt(aLiq+bLiq), color:GOLD},
-      {label:'Dedução (50% desp.)', value:'-'+fmt(deducaoTotal), color:RED}
+      {label:'Dedução s/ impostos', value:'-'+fmt(deducaoTotal), color:RED}
     ], y);
     y += 3;
     if (splitRows.length > 0) {
@@ -4061,4 +4071,4 @@ window.addEventListener('resize', () => {
 init().catch(console.error);
 </script>
 </body>
-</html>
+</html> 
