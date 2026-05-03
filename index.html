@@ -2285,8 +2285,9 @@ function renderAnual() {
   const totalAlugueisAno = (ydAnual.alugueis||[]).filter(a => !filterActive && a.mes <= curM || filterActive).length;
   const totalOpsAno = totalVendasAno + totalAlugueisAno;
   // Ticket médio anual — só vendas
-  const totalVendasAno = Object.keys(byMonth).reduce((s,k)=>s+byMonth[k].vendas,0);
-  const recVendasAno = Object.keys(byMonth).reduce((s,k)=>s+byMonth[k].recVendas,0);
+  const recVendasAno = (ydAnual.vendas||[])
+    .filter(v => !filterActive ? v.mes <= curM : true)
+    .reduce((s,v) => s + (v.comissao||0), 0);
   const ticketMedioAno = totalVendasAno > 0 ? recVendasAno / totalVendasAno : 0;
  
   document.getElementById('anualCards').innerHTML = `
