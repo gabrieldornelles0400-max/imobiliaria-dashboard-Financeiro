@@ -1376,25 +1376,52 @@ function getYearData() {
   }
   return state.data[state.currentYear];
 }
+// Template padrão de despesas fixas
+const DESPESAS_FIXAS_TEMPLATE = [
+  {id:'f1',nome:'Contabilidade',categoria:'Serviços',valor:680},
+  {id:'f2',nome:'Aluguel',categoria:'Escritório',valor:4835.12},
+  {id:'f3',nome:'Condomínio',categoria:'Escritório',valor:900},
+  {id:'f4',nome:'IPTU',categoria:'Escritório',valor:234},
+  {id:'f5',nome:'Internet',categoria:'Escritório',valor:99.90},
+  {id:'f6',nome:'Telefone',categoria:'Escritório',valor:39.90},
+  {id:'f7',nome:'Luz',categoria:'Escritório',valor:95},
+  {id:'f8',nome:'CRM Licença',categoria:'Software',valor:299.90},
+  {id:'f9',nome:'Anuidade Cartão',categoria:'Serviços',valor:25},
+  {id:'f10',nome:'Cesta de Relacionamento',categoria:'Serviços',valor:60},
+  {id:'f11',nome:'Limpeza',categoria:'Serviços',valor:170}
+];
+ 
 function defaultYearData() {
   return {
     vendas: [],
     alugueis: [],
     despVariaveis: [],
-    despFixas: [
-      {id:'f1',nome:'Contabilidade',categoria:'Serviços',valor:680},
-      {id:'f2',nome:'Aluguel',categoria:'Escritório',valor:4835.12},
-      {id:'f3',nome:'Condomínio',categoria:'Escritório',valor:900},
-      {id:'f4',nome:'IPTU',categoria:'Escritório',valor:234},
-      {id:'f5',nome:'Internet',categoria:'Escritório',valor:99.90},
-      {id:'f6',nome:'Telefone',categoria:'Escritório',valor:39.90},
-      {id:'f7',nome:'Luz',categoria:'Escritório',valor:95},
-      {id:'f8',nome:'CRM Licença',categoria:'Software',valor:299.90},
-      {id:'f9',nome:'Anuidade Cartão',categoria:'Serviços',valor:25},
-      {id:'f10',nome:'Cesta de Relacionamento',categoria:'Serviços',valor:60},
-      {id:'f11',nome:'Limpeza',categoria:'Serviços',valor:170}
-    ]
+    despFixas: JSON.parse(JSON.stringify(DESPESAS_FIXAS_TEMPLATE)), // template global
+    despFixasMes: {} // snapshot por mês: {0: [...], 1: [...], ...}
   };
+}
+ 
+// Retorna as despesas fixas de um mês específico
+// Se o mês não tem snapshot próprio, herda do mês anterior (ou do template global)
+function getFixasDoMes(yd, mes) {
+  if (!yd) return JSON.parse(JSON.stringify(DESPESAS_FIXAS_TEMPLATE));
+  if (yd.despFixasMes && yd.despFixasMes[mes]) {
+    return yd.despFixasMes[mes];
+  }
+  // Herda do mês anterior mais próximo que tenha snapshot
+  for (let m = mes - 1; m >= 0; m--) {
+    if (yd.despFixasMes && yd.despFixasMes[m]) {
+      return JSON.parse(JSON.stringify(yd.despFixasMes[m]));
+    }
+  }
+  // Sem histórico: usa o template global do ano
+  return JSON.parse(JSON.stringify(yd.despFixas || DESPESAS_FIXAS_TEMPLATE));
+}
+ 
+// Salva snapshot das fixas para um mês
+function salvarFixasDoMes(yd, mes, fixas) {
+  if (!yd.despFixasMes) yd.despFixasMes = {};
+  yd.despFixasMes[mes] = JSON.parse(JSON.stringify(fixas));
 }
  
 // ============================================================
@@ -1887,7 +1914,7 @@ function getPeriodTotals() {
     (yd.despVariaveis || []).forEach(d => {
       if (d.mes === month && itemInDateFilter(d, start, end)) despVarTotal += (d.valor || 0);
     });
-    const fixas = (yd.despFixas || []);
+    const fixas = getFixasDoMes(yd, month); // snapshot do mês específico
     despFixasTotal += fixas.reduce((s, f) => s + (f.valor || 0), 0);
   });
  
@@ -1988,10 +2015,10 @@ function renderMensal() {
     ? `Período: ${fmtDateBR(period.start)} a ${fmtDateBR(period.end)}`
     : `${MONTH_FULL[m]} ${state.currentYear}`;
  
-  // Cards — ticket médio
+  // Cards — ticket médio (só vendas)
   const totalOps = d.vendas.length + d.alugueis.length;
-  const ticketMedio = totalOps > 0 ? t.receitaBruta / totalOps : 0;
-  const ticketVendas = d.vendas.length > 0 ? d.vendas.reduce((s,v)=>s+(v.liquido||0),0) / d.vendas.length : 0;
+  const ticketMedio = d.vendas.length > 0 ? d.vendas.reduce((s,v)=>s+(v.comissao||0),0) / d.vendas.length : 0;
+  const ticketVendas = ticketMedio; // alias
   const liquidoSign = t.liquido >= 0 ? '+' : '-';
   document.getElementById('mensalCards').innerHTML = `
     <div class="card"><div class="card-label">Receita Bruta</div><div class="card-value gold">${fmt(t.receitaBruta)}</div><div class="card-sub">${d.vendas.length} venda(s) + ${d.alugueis.length} aluguel(eis)${isPeriod ? ' no período' : ''}</div></div>
@@ -2001,7 +2028,7 @@ function renderMensal() {
     <div class="card" style="border-color:rgba(201,168,76,0.2);background:rgba(201,168,76,0.04);">
       <div class="card-label" style="color:var(--gold)">Ticket Médio</div>
       <div class="card-value gold">${totalOps > 0 ? fmt(ticketMedio) : '—'}</div>
-      <div class="card-sub">${d.vendas.length > 0 ? 'Vendas: ' + fmt(ticketVendas) : totalOps === 0 ? 'Sem operações' : 'Só aluguéis'}</div>
+      <div class="card-sub">${d.vendas.length > 0 ? d.vendas.length + ' venda(s) no mês' : 'Sem vendas no mês'}</div>
     </div>
   `;
  
@@ -2257,7 +2284,10 @@ function renderAnual() {
   const totalVendasAno = (ydAnual.vendas||[]).filter(v => !filterActive && v.mes <= curM || filterActive).length;
   const totalAlugueisAno = (ydAnual.alugueis||[]).filter(a => !filterActive && a.mes <= curM || filterActive).length;
   const totalOpsAno = totalVendasAno + totalAlugueisAno;
-  const ticketMedioAno = totalOpsAno > 0 ? totalRec / totalOpsAno : 0;
+  // Ticket médio anual — só vendas
+  const totalVendasAno = Object.keys(byMonth).reduce((s,k)=>s+byMonth[k].vendas,0);
+  const recVendasAno = Object.keys(byMonth).reduce((s,k)=>s+byMonth[k].recVendas,0);
+  const ticketMedioAno = totalVendasAno > 0 ? recVendasAno / totalVendasAno : 0;
  
   document.getElementById('anualCards').innerHTML = `
     <div class="card"><div class="card-label">Receita Bruta ${filterActive ? 'Filtrada' : 'Acumulada'}</div><div class="card-value gold">${fmt(totalRec)}</div><div class="card-sub">${filterActive ? 'No período filtrado' : curM >= 0 ? `Jan–${MONTHS[curM]} ${curY}` : `Exercício ${curY}`}</div></div>
@@ -2934,33 +2964,53 @@ function switchDespTab(tab, btn) {
   });
 }
  
+// Retorna fixas do mês atual em edição (currentMonth)
+function getFixasAtuais() {
+  const yd = getYearData();
+  return getFixasDoMes(yd, state.currentMonth);
+}
+ 
+// Garante que o mês tem snapshot próprio (cria se não existe)
+function ensureMonthSnapshot() {
+  const yd = getYearData();
+  if (!yd.despFixasMes) yd.despFixasMes = {};
+  if (!yd.despFixasMes[state.currentMonth]) {
+    yd.despFixasMes[state.currentMonth] = getFixasDoMes(yd, state.currentMonth);
+  }
+  return yd;
+}
+ 
 function addDespesaFixa() {
   const nome = document.getElementById('dfNome').value.trim();
   const valor = parseFloat(document.getElementById('dfValor').value) || 0;
   const categoria = document.getElementById('dfCategoria').value;
   if (!nome || !valor) { toast('Preencha nome e valor', 'error'); return; }
-  const yd = getYearData();
-  yd.despFixas.push({id: uid(), nome, categoria, valor});
+  const yd = ensureMonthSnapshot();
+  yd.despFixasMes[state.currentMonth].push({id: uid(), nome, categoria, valor});
+  // Também adiciona ao template global do ano se for novo item
+  if (!yd.despFixas.find(f => f.nome === nome)) {
+    yd.despFixas.push({id: uid(), nome, categoria, valor});
+  }
   saveData();
   document.getElementById('dfNome').value = '';
   document.getElementById('dfValor').value = '';
   renderAll();
-  toast('Despesa fixa adicionada!', 'success');
+  toast('Despesa fixa adicionada para ' + MONTHS[state.currentMonth] + '!', 'success');
 }
  
 function deleteFixa(id) {
-  confirmDelete('Excluir despesa fixa?', 'Esta despesa será removida permanentemente.', () => {
-    const yd = getYearData();
-    yd.despFixas = yd.despFixas.filter(f => f.id !== id);
+  confirmDelete('Excluir despesa fixa deste mês?', 'Remove apenas de ' + MONTHS[state.currentMonth] + '. Outros meses não são afetados.', () => {
+    const yd = ensureMonthSnapshot();
+    yd.despFixasMes[state.currentMonth] = yd.despFixasMes[state.currentMonth].filter(f => f.id !== id);
     saveData();
     renderAll();
-    toast('Despesa fixa removida', 'success');
+    toast('Removida de ' + MONTHS[state.currentMonth], 'success');
   });
 }
  
 function openEditFixa(id) {
-  const yd = getYearData();
-  const f = yd.despFixas.find(x => x.id === id);
+  const fixas = getFixasAtuais();
+  const f = fixas.find(x => x.id === id);
   if (!f) return;
   document.getElementById('editFixaId').value = f.id;
   document.getElementById('editFixaNome').value = f.nome;
@@ -2971,11 +3021,12 @@ function openEditFixa(id) {
  
 function saveEditFixa() {
   const id = document.getElementById('editFixaId').value;
-  const yd = getYearData();
-  const idx = yd.despFixas.findIndex(f => f.id === id);
+  const yd = ensureMonthSnapshot();
+  const fixas = yd.despFixasMes[state.currentMonth];
+  const idx = fixas.findIndex(f => f.id === id);
   if (idx < 0) return;
-  yd.despFixas[idx] = {
-    ...yd.despFixas[idx],
+  fixas[idx] = {
+    ...fixas[idx],
     nome: document.getElementById('editFixaNome').value,
     categoria: document.getElementById('editFixaCat').value,
     valor: parseFloat(document.getElementById('editFixaValor').value) || 0
@@ -2983,7 +3034,7 @@ function saveEditFixa() {
   saveData();
   closeModal('modalEditFixa');
   renderAll();
-  toast('Despesa fixa atualizada!', 'success');
+  toast('Atualizada para ' + MONTHS[state.currentMonth] + '!', 'success');
 }
  
 function saveDespVar() {
@@ -3062,12 +3113,14 @@ function deleteDespVar(id) {
  
 function renderDespesasPage() {
   const yd = getYearData();
-  const despFixas = yd.despFixas || [];
+  const despFixas = getFixasDoMes(yd, state.currentMonth); // snapshot do mês atual
   const despVar = yd.despVariaveis || [];
   const total = despFixas.reduce((s,f) => s+f.valor, 0);
+  const hasOwnSnapshot = yd.despFixasMes && yd.despFixasMes[state.currentMonth];
+  const herancaMsg = !hasOwnSnapshot ? `<div style="font-size:10px;color:var(--text3);padding:8px 14px;background:rgba(201,168,76,0.06);border-bottom:1px solid var(--border);">⬆ Valores herdados do mês anterior. Edite qualquer item para criar um snapshot próprio de <strong>${MONTHS[state.currentMonth]}</strong>.</div>` : `<div style="font-size:10px;color:var(--green);padding:8px 14px;background:rgba(76,175,125,0.05);border-bottom:1px solid var(--border);">✓ Valores específicos de <strong>${MONTHS[state.currentMonth]} ${state.currentYear}</strong></div>`;
  
   // Fixas
-  let fHtml = `<div class="table-header"><div class="table-header-title">Despesas Fixas Mensais</div><div class="table-header-title" style="color:var(--red)">${fmt(total)}/mês</div></div>`;
+  let fHtml = `<div class="table-header"><div class="table-header-title">Fixas de ${MONTHS[state.currentMonth]} ${state.currentYear}</div><div class="table-header-title" style="color:var(--red)">${fmt(total)}/mês</div></div>${herancaMsg}`;
   despFixas.forEach(f => {
     const col = CAT_COLORS[f.categoria] || '#999';
     fHtml += `<div class="despesa-fixa-item">
@@ -3077,7 +3130,7 @@ function renderDespesasPage() {
       <div class="despesa-fixa-edit"><button class="btn-edit" onclick="openEditFixa('${f.id}')">✏</button><button class="btn-del" onclick="deleteFixa('${f.id}')">✕</button></div>
     </div>`;
   });
-  fHtml += `<div class="section-total"><span>Total mensal</span><span style="color:var(--red)">${fmt(total)}</span></div>`;
+  fHtml += `<div class="section-total"><span>Total ${MONTHS[state.currentMonth]}</span><span style="color:var(--red)">${fmt(total)}</span></div>`;
   document.getElementById('despFixasList').innerHTML = fHtml;
  
   // Variáveis
@@ -3608,9 +3661,13 @@ function coletarDadosPeriodo(inicio, fim) {
     (yd.despVariaveis||[]).forEach(dv => {
       const d = recDate(dv, y); if (d >= inicio && d <= fim) result.despVariaveis.push({...dv, _year:y});
     });
-    (yd.despFixas||[]).length && MONTHS.forEach((_,m) => {
+    const hasFixas = (yd.despFixas||[]).length > 0 || (yd.despFixasMes && Object.keys(yd.despFixasMes).length > 0);
+    hasFixas && MONTHS.forEach((_,m) => {
       const md = new Date(y, m, 1);
-      if (md >= inicio && md <= fim) result.mesesFixas.push({year:y, mes:m, fixas:yd.despFixas, total: yd.despFixas.reduce((s,f)=>s+f.valor,0)});
+      if (md >= inicio && md <= fim) {
+        const fixasM = getFixasDoMes(yd, m);
+        if (fixasM.length > 0) result.mesesFixas.push({year:y, mes:m, fixas:fixasM, total: fixasM.reduce((s,f)=>s+f.valor,0)});
+      }
     });
   }
   return result;
@@ -3798,9 +3855,10 @@ function gerarPDF() {
   if (['completo','receitas','vendas'].includes(tipo) && data.vendas.length > 0) {
     y = ensureSpace(30, y);
     y = sectionTitle('Vendas (' + data.vendas.length + ')', y);
+    // CW = 180mm. Cols must sum to ≤ 180, last col gets remainder (w:0)
     const cols = opts.obs
-      ? [{label:'Imóvel',w:50,maxLen:28},{label:'Mês',w:14},{label:'Comissão',w:26,align:'right',color:GOLD},{label:'Imposto',w:22,align:'right',color:RED},{label:'Líquido',w:22,align:'right',color:GREEN},{label:`${getSocioA()}`,w:25,align:'right',color:GREEN},{label:`${getSocioB()}`,w:21,align:'right',color:BLUE},{label:'Obs',w:0,maxLen:20}]
-      : [{label:'Imóvel',w:58,maxLen:32},{label:'Mês',w:14},{label:'Comissão',w:30,align:'right',color:GOLD},{label:'Imposto',w:25,align:'right',color:RED},{label:'Custos',w:22,align:'right',color:RED},{label:'Líquido',w:25,align:'right',color:GREEN},{label:`${getSocioA()}`,w:0,align:'right',color:GREEN}];
+      ? [{label:'Imóvel',w:44,maxLen:24},{label:'Mês',w:12},{label:'Comissão',w:28,align:'right',color:GOLD},{label:'Imposto',w:22,align:'right',color:RED},{label:'Líquido',w:22,align:'right',color:GREEN},{label:getSocioA(),w:28,align:'right',color:GREEN},{label:getSocioB(),w:24,align:'right',color:BLUE}]
+      : [{label:'Imóvel',w:55,maxLen:30},{label:'Mês',w:12},{label:'Comissão',w:30,align:'right',color:GOLD},{label:'Imposto',w:25,align:'right',color:RED},{label:'Custos',w:22,align:'right',color:RED},{label:'Líquido',w:0,align:'right',color:GREEN}];
     y = tableHead(cols, y);
     let totalVendas = 0;
     data.vendas.forEach((v, i) => {
@@ -3820,7 +3878,7 @@ function gerarPDF() {
   if (['completo','receitas','alugueis'].includes(tipo) && data.alugueis.length > 0) {
     y = ensureSpace(30, y);
     y = sectionTitle('Aluguéis (' + data.alugueis.length + ')', y);
-    const cols = [{label:'Imóvel',w:65,maxLen:36},{label:'Mês',w:16},{label:'Valor',w:28,align:'right',color:BLUE},{label:'Imposto NF',w:28,align:'right',color:RED},{label:'Líquido',w:0,align:'right',color:GREEN}];
+    const cols = [{label:'Imóvel',w:60,maxLen:34},{label:'Mês',w:14},{label:'Valor',w:28,align:'right',color:BLUE},{label:'Imposto NF',w:28,align:'right',color:RED},{label:'Líquido',w:0,align:'right',color:GREEN}];
     y = tableHead(cols, y);
     let totalAlug = 0;
     data.alugueis.forEach((a, i) => {
@@ -3839,7 +3897,7 @@ function gerarPDF() {
     y = sectionTitle('Despesas Fixas — ' + data.mesesFixas.length + ' mês(es)', y);
     // Group unique fixas from first month as template
     const fixas = data.mesesFixas[0]?.fixas || [];
-    const cols = [{label:'Descrição',w:90,maxLen:45},{label:'Categoria',w:40},{label:'Valor/mês',w:30,align:'right',color:RED},{label:'Total período',w:0,align:'right',color:RED}];
+    const cols = [{label:'Descrição',w:85,maxLen:42},{label:'Categoria',w:38},{label:'Valor/mês',w:30,align:'right',color:RED},{label:'Total período',w:0,align:'right',color:RED}];
     y = tableHead(cols, y);
     let totalFixasPeriodo = 0;
     fixas.forEach((f, i) => {
@@ -3856,7 +3914,7 @@ function gerarPDF() {
   if (['completo','despesas'].includes(tipo) && opts.despVar && data.despVariaveis.length > 0) {
     y = ensureSpace(30, y);
     y = sectionTitle('Despesas Variáveis (' + data.despVariaveis.length + ')', y);
-    const cols = [{label:'Descrição',w:65,maxLen:35},{label:'Categoria',w:30},{label:'Mês',w:16},{label:'Data',w:22},{label:'Valor',w:0,align:'right',color:RED}];
+    const cols = [{label:'Descrição',w:62,maxLen:33},{label:'Categoria',w:28},{label:'Mês',w:14},{label:'Data',w:20},{label:'Valor',w:0,align:'right',color:RED}];
     y = tableHead(cols, y);
     let totalDV = 0;
     data.despVariaveis.forEach((d, i) => {
@@ -3872,7 +3930,7 @@ function gerarPDF() {
   if (opts.impostos && impostos > 0 && ['completo','despesas','receitas','vendas','alugueis'].includes(tipo)) {
     y = ensureSpace(30, y);
     y = sectionTitle('Impostos NF emitidos', y);
-    const cols = [{label:'Referência',w:80,maxLen:42},{label:'Tipo',w:20},{label:'Mês',w:16},{label:'Base',w:26,align:'right'},{label:'%',w:14,align:'right'},{label:'Imposto',w:0,align:'right',color:RED}];
+    const cols = [{label:'Referência',w:72,maxLen:38},{label:'Tipo',w:18},{label:'Mês',w:14},{label:'Base',w:28,align:'right'},{label:'%',w:12,align:'right'},{label:'Imposto',w:0,align:'right',color:RED}];
     y = tableHead(cols, y);
     let idx = 0;
     data.vendas.forEach(v => {
@@ -3952,7 +4010,7 @@ function gerarPDF() {
     ], y);
     y += 3;
     if (splitRows.length > 0) {
-      const cols = [{label:'Item',w:70,maxLen:38},{label:'Tipo',w:20},{label:'Mês',w:16},{label:getSocioA(),w:32,align:'right',color:GREEN},{label:getSocioB(),w:0,align:'right',color:BLUE}];
+      const cols = [{label:'Item',w:68,maxLen:36},{label:'Tipo',w:18},{label:'Mês',w:14},{label:getSocioA(),w:40,align:'right',color:GREEN},{label:getSocioB(),w:0,align:'right',color:BLUE}];
       y = tableHead(cols, y);
       splitRows.forEach((r, i) => { y = ensureSpace(8, y); y = tableRow(cols, r, y, i%2===1); });
       y = totalRow('Totais brutos', fmt(aTot)+' / '+fmt(bTot), y, GOLD);
