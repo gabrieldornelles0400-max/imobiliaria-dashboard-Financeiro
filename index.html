@@ -57,7 +57,134 @@
     transition: background 0.3s, color 0.3s;
     font-size: 14px;
   }
-
+ 
+  /* LOGIN */
+  #loginScreen {
+    position: fixed;
+    inset: 0;
+    background: var(--bg);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+    padding: 20px;
+  }
+  .login-box {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 40px 36px;
+    width: 100%;
+    max-width: 400px;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.4);
+  }
+  .login-logo {
+    text-align: center;
+    margin-bottom: 32px;
+  }
+  .login-logo-title {
+    font-size: 22px;
+    font-weight: 800;
+    color: var(--gold);
+    letter-spacing: -0.5px;
+  }
+  .login-logo-sub {
+    font-size: 11px;
+    color: var(--text3);
+    font-weight: 500;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    margin-top: 4px;
+  }
+  .login-field {
+    margin-bottom: 14px;
+  }
+  .login-label {
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--text2);
+    margin-bottom: 6px;
+    display: block;
+  }
+  .login-input {
+    width: 100%;
+    background: var(--bg3);
+    border: 1px solid var(--border2);
+    border-radius: 8px;
+    padding: 11px 14px;
+    font-size: 14px;
+    color: var(--text);
+    font-family: 'Inter', sans-serif;
+    outline: none;
+    transition: border-color .15s;
+  }
+  .login-input:focus { border-color: var(--gold); }
+  .login-btn {
+    width: 100%;
+    background: var(--gold);
+    color: #000;
+    border: none;
+    border-radius: 8px;
+    padding: 12px;
+    font-size: 14px;
+    font-weight: 700;
+    font-family: 'Inter', sans-serif;
+    cursor: pointer;
+    margin-top: 8px;
+    transition: background .15s;
+  }
+  .login-btn:hover { background: var(--gold-light); }
+  .login-btn:disabled { opacity: 0.6; cursor: not-allowed; }
+  .login-error {
+    background: rgba(224,82,82,0.1);
+    border: 1px solid rgba(224,82,82,0.3);
+    color: var(--red);
+    border-radius: 7px;
+    padding: 10px 14px;
+    font-size: 12px;
+    font-weight: 500;
+    margin-bottom: 14px;
+    display: none;
+  }
+  .login-user-badge {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 10px;
+    background: var(--bg3);
+    border-radius: 7px;
+    margin-bottom: 6px;
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--text2);
+  }
+  .login-user-avatar {
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    background: var(--gold);
+    color: #000;
+    font-size: 11px;
+    font-weight: 800;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+  .logout-btn {
+    background: none;
+    border: none;
+    color: var(--text3);
+    font-size: 11px;
+    cursor: pointer;
+    margin-left: auto;
+    font-family: 'Inter', sans-serif;
+    padding: 2px 6px;
+    border-radius: 4px;
+    transition: color .15s;
+  }
+  .logout-btn:hover { color: var(--red); }
+ 
   /* SIDEBAR */
   .sidebar {
     width: var(--sidebar-w);
@@ -247,7 +374,7 @@
     transition: left 0.2s;
   }
   .toggle-track.on .toggle-thumb { left: 16px; }
-
+ 
   /* MAIN */
   .main {
     margin-left: var(--sidebar-w);
@@ -312,7 +439,7 @@
   .btn-danger:hover { background: rgba(224,82,82,0.2); }
   .btn-sm { padding: 5px 10px; font-size: 11px; }
   .btn-icon { padding: 6px 8px; }
-
+ 
   /* PAGE */
   .page { display: none; padding: 24px; }
   .page.active { display: block; }
@@ -320,7 +447,7 @@
   .page-header h1 { font-size: 22px; font-weight: 800; letter-spacing: -0.5px; }
   .page-header h1 span { color: var(--gold); font-style: italic; }
   .page-header-sub { font-size: 12px; color: var(--text3); margin-top: 3px; font-weight: 500; }
-
+ 
   /* CARDS */
   .cards-grid {
     display: grid;
@@ -341,7 +468,7 @@
   .card-value.red { color: var(--red); }
   .card-value.gold { color: var(--gold); }
   .card-sub { font-size: 11px; color: var(--text3); margin-top: 5px; font-weight: 400; }
-
+ 
   /* CHARTS ROW */
   .charts-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 20px; }
   .chart-card { background: var(--bg2); border: 1px solid var(--border); border-radius: var(--radius); padding: 16px 18px; }
@@ -352,7 +479,7 @@
   .legend-dot { width: 9px; height: 9px; border-radius: 50%; flex-shrink: 0; }
   .legend-label { color: var(--text2); flex: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 140px; }
   .legend-pct { font-weight: 700; color: var(--text); font-size: 11px; }
-
+ 
   /* TABLE */
   .table-section { background: var(--bg2); border: 1px solid var(--border); border-radius: var(--radius); margin-bottom: 20px; overflow: hidden; }
   .table-header { padding: 12px 18px; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; }
@@ -381,7 +508,7 @@
   .badge-blue { background: rgba(91,143,212,0.12); color: var(--blue); }
   .badge-orange { background: rgba(224,122,58,0.12); color: var(--orange); }
   .badge-purple { background: rgba(155,109,212,0.12); color: var(--purple); }
-
+ 
   /* FORM */
   .form-card { background: var(--bg2); border: 1px solid var(--border); border-radius: var(--radius); padding: 20px; margin-bottom: 20px; }
   .form-card-title { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: var(--text3); margin-bottom: 16px; }
@@ -408,14 +535,14 @@
   .form-input::placeholder { color: var(--text3); }
   .form-textarea { resize: vertical; min-height: 70px; }
   .form-select option { background: var(--bg3); }
-
+ 
   /* CUSTOS VARIÁVEIS */
   .var-costs-list { display: flex; flex-direction: column; gap: 6px; margin-bottom: 10px; }
   .var-cost-item { display: flex; gap: 8px; align-items: center; }
   .var-cost-item .form-input { flex: 1; }
   .var-cost-remove { background: rgba(224,82,82,0.1); border: 1px solid rgba(224,82,82,0.2); color: var(--red); border-radius: 5px; padding: 6px 10px; cursor: pointer; font-size: 14px; font-weight: 700; font-family: 'Inter',sans-serif; transition: all 0.15s; }
   .var-cost-remove:hover { background: rgba(224,82,82,0.22); }
-
+ 
   /* RESULT CALC */
   .result-bar {
     display: grid;
@@ -430,7 +557,7 @@
   .result-item { text-align: center; }
   .result-item .label { font-size: 9px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.8px; color: var(--text3); margin-bottom: 5px; }
   .result-item .value { font-size: 15px; font-weight: 800; }
-
+ 
   /* DESPESAS FIXAS */
   .despesa-fixa-item {
     display: flex;
@@ -448,13 +575,13 @@
   .despesa-fixa-cat { font-size: 10px; color: var(--text3); text-transform: uppercase; letter-spacing: 0.5px; }
   .despesa-fixa-value { font-size: 14px; font-weight: 700; color: var(--text); }
   .despesa-fixa-edit { display: flex; gap: 5px; }
-
+ 
   /* TABS */
   .tab-bar { display: flex; gap: 4px; margin-bottom: 16px; background: var(--bg3); padding: 4px; border-radius: 8px; width: fit-content; }
   .tab-btn { padding: 7px 16px; border-radius: 6px; font-size: 12px; font-weight: 600; cursor: pointer; border: none; font-family: 'Inter',sans-serif; background: transparent; color: var(--text2); transition: all 0.15s; }
   .tab-btn.active { background: var(--bg2); color: var(--text); box-shadow: 0 1px 4px rgba(0,0,0,0.15); }
   .tab-btn:hover:not(.active) { color: var(--text); }
-
+ 
   /* ANNUAL */
   .annual-bar-row { display: flex; align-items: center; gap: 10px; padding: 9px 14px; border-bottom: 1px solid var(--border); }
   .annual-bar-row:last-child { border-bottom: none; }
@@ -467,7 +594,7 @@
   
   /* CHART LINE */
   .chart-line-area { width: 100%; height: 180px; }
-
+ 
   /* MODAL */
   .modal-overlay {
     display: none;
@@ -498,19 +625,19 @@
   .modal-close { background: var(--bg3); border: none; color: var(--text2); width: 28px; height: 28px; border-radius: 6px; cursor: pointer; font-size: 16px; display: flex; align-items: center; justify-content: center; transition: all 0.15s; }
   .modal-close:hover { background: var(--bg5); color: var(--text); }
   .modal-footer { display: flex; justify-content: flex-end; gap: 8px; margin-top: 20px; padding-top: 16px; border-top: 1px solid var(--border); }
-
+ 
   /* SOCIO SPLIT */
   .split-info { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 10px; }
   .split-box { background: var(--bg3); border: 1px solid var(--border); border-radius: 8px; padding: 12px; text-align: center; }
   .split-box-name { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.8px; color: var(--text3); margin-bottom: 5px; }
   .split-box-pct { font-size: 18px; font-weight: 800; color: var(--gold); }
   .split-box-value { font-size: 13px; font-weight: 700; color: var(--green); margin-top: 3px; }
-
+ 
   /* EMPTY STATE */
   .empty-state { text-align: center; padding: 40px 20px; color: var(--text3); }
   .empty-state .emoji { font-size: 32px; margin-bottom: 10px; }
   .empty-state p { font-size: 13px; }
-
+ 
   /* TOAST */
   .toast-container { position: fixed; bottom: 20px; right: 20px; z-index: 2000; display: flex; flex-direction: column; gap: 8px; }
   .toast {
@@ -530,17 +657,17 @@
   .toast.success { border-color: var(--green); }
   .toast.error { border-color: var(--red); }
   @keyframes toastIn { from { transform: translateX(20px); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
-
+ 
   /* MOBILE HAMBURGER */
   .hamburger { display: none; background: none; border: none; color: var(--text); font-size: 20px; cursor: pointer; padding: 4px; }
   .sidebar-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 99; }
-
+ 
   /* ALUGUEL */
   .aluguel-nota { font-size: 11px; color: var(--text3); background: rgba(201,168,76,0.06); border: 1px solid rgba(201,168,76,0.15); border-radius: 6px; padding: 8px 12px; margin-top: 8px; }
-
+ 
   /* DIVIDER */
   .divider { border: none; border-top: 1px solid var(--border); margin: 16px 0; }
-
+ 
   /* RESPONSIVE */
   /* RELATÓRIOS */
   .rel-tipo-card {
@@ -610,7 +737,7 @@
   .extrato-summary-card .lbl { font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--text3);margin-bottom:4px; }
   .extrato-summary-card .val { font-size:17px;font-weight:800; }
   @media(max-width:600px){ .extrato-summary-cards{grid-template-columns:1fr 1fr;} .extrato-col-val2{display:none;} }
-
+ 
   @media (max-width: 900px) {
     .cards-grid { grid-template-columns: repeat(3, 1fr); }
     .charts-row { grid-template-columns: 1fr; }
@@ -655,10 +782,34 @@
 </style>
 </head>
 <body>
-
+ 
 <!-- Sidebar overlay (mobile) -->
+<!-- LOGIN SCREEN -->
+<div id="loginScreen">
+  <div class="login-box">
+    <div class="login-logo">
+      <div style="font-size:36px;margin-bottom:10px;">🏢</div>
+      <div class="login-logo-title">Imobiliária</div>
+      <div class="login-logo-sub">Dashboard Financeiro</div>
+    </div>
+    <div class="login-error" id="loginError"></div>
+    <div class="login-field">
+      <label class="login-label">E-mail</label>
+      <input class="login-input" type="email" id="loginEmail" placeholder="seu@email.com" onkeydown="if(event.key==='Enter')doLogin()">
+    </div>
+    <div class="login-field">
+      <label class="login-label">Senha</label>
+      <input class="login-input" type="password" id="loginPassword" placeholder="••••••••" onkeydown="if(event.key==='Enter')doLogin()">
+    </div>
+    <button class="login-btn" id="loginBtn" onclick="doLogin()">Entrar</button>
+    <div style="text-align:center;margin-top:16px;font-size:11px;color:var(--text3);">
+      Acesso restrito — apenas usuários autorizados
+    </div>
+  </div>
+</div>
+ 
 <div class="sidebar-overlay" id="sidebarOverlay" onclick="closeSidebar()"></div>
-
+ 
 <!-- SIDEBAR -->
 <nav class="sidebar" id="sidebar">
   <div class="sidebar-logo">
@@ -690,6 +841,11 @@
     </div>
   </div>
   <div class="sidebar-bottom">
+    <div id="userBadge" class="login-user-badge" style="display:none;">
+      <div class="login-user-avatar" id="userAvatar">?</div>
+      <span id="userEmail" style="flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:11px;"></span>
+      <button class="logout-btn" onclick="doLogout()">Sair</button>
+    </div>
     <div style="display:flex;align-items:center;justify-content:space-between;padding:6px 10px;margin-bottom:4px;">
       <span id="syncStatus" style="font-size:10px;font-weight:600;color:var(--text3);transition:color .3s;">⟳ Conectando...</span>
     </div>
@@ -734,7 +890,7 @@
     </div>
   </div>
 </nav>
-
+ 
 <!-- MAIN -->
 <div class="main">
   <!-- TOPBAR -->
@@ -748,7 +904,7 @@
       <button class="btn btn-outline btn-sm" onclick="exportPDF()">⬇ PDF</button>
     </div>
   </header>
-
+ 
   <!-- PAGE: MENSAL -->
   <div class="page active" id="page-mensal">
     <div class="page-header">
@@ -779,7 +935,7 @@
     </div>
     <div id="socioMensalPanel" style="background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);padding:16px 18px;margin-bottom:20px;"></div>
   </div>
-
+ 
   <!-- PAGE: ANUAL -->
   <div class="page" id="page-anual">
     <div class="page-header">
@@ -797,7 +953,7 @@
       <div id="anualBarTable"></div>
     </div>
   </div>
-
+ 
   <!-- PAGE: VENDAS -->
   <div class="page" id="page-vendas">
     <div class="page-header"><h1>Registrar <span>Venda</span></h1></div>
@@ -832,14 +988,14 @@
           <select class="form-select" id="vMes"></select>
         </div>
       </div>
-
+ 
       <!-- Custos variáveis -->
       <div style="margin-top:14px;">
         <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--text3);margin-bottom:10px;">Custos variáveis desta venda</div>
         <div class="var-costs-list" id="varCostsList"></div>
         <button class="btn btn-outline btn-sm" onclick="addVarCost()">+ Adicionar custo</button>
       </div>
-
+ 
       <!-- Split sócios -->
       <div style="margin-top:14px;">
         <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--text3);margin-bottom:8px;">Divisão entre sócios</div>
@@ -874,25 +1030,25 @@
         </div>
         <div class="split-info" id="splitInfo"></div>
       </div>
-
+ 
       <!-- Observação -->
       <div class="form-group" style="margin-top:12px;">
         <label class="form-label">Observação <span class="optional">(opcional)</span></label>
         <textarea class="form-textarea" id="vObs" placeholder="Notas sobre esta venda..."></textarea>
       </div>
-
+ 
       <div class="result-bar" id="vendaResultBar" style="margin-top:14px;"></div>
-
+ 
       <div style="display:flex;justify-content:flex-end;gap:8px;margin-top:14px;">
         <button class="btn btn-outline" onclick="cancelEditVenda()" id="cancelVendaBtn" style="display:none;">Cancelar</button>
         <button class="btn btn-gold" onclick="saveVenda()" id="saveVendaBtn">Registrar venda →</button>
       </div>
     </div>
-
+ 
     <!-- Lista de vendas -->
     <div class="table-section" id="vendasListTable"></div>
   </div>
-
+ 
   <!-- PAGE: ALUGUEIS -->
   <div class="page" id="page-alugueis">
     <div class="page-header"><h1>Registrar <span>Aluguel</span></h1></div>
@@ -931,7 +1087,7 @@
         <label class="form-label">Observação <span class="optional">(opcional)</span></label>
         <textarea class="form-textarea" id="aObs" placeholder="Notas sobre este aluguel..."></textarea>
       </div>
-
+ 
       <!-- Split sócios no aluguel -->
       <div style="margin-top:14px;">
         <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--text3);margin-bottom:8px;">Divisão entre sócios</div>
@@ -955,7 +1111,7 @@
         </div>
         <div class="split-info" id="aluguelSplitInfo" style="margin-top:10px;"></div>
       </div>
-
+ 
       <div class="aluguel-nota">💡 O imposto é calculado automaticamente com base no % informado. Lembre-se de emitir a nota fiscal correspondente.</div>
       <div class="result-bar" id="aluguelResultBar" style="margin-top:12px;"></div>
       <div style="display:flex;justify-content:flex-end;gap:8px;margin-top:14px;">
@@ -965,7 +1121,7 @@
     </div>
     <div class="table-section" id="alugueisListTable"></div>
   </div>
-
+ 
   <!-- PAGE: DESPESAS -->
   <div class="page" id="page-despesas">
     <div class="page-header"><h1>Despesas <span>do mês</span></h1></div>
@@ -975,7 +1131,7 @@
       <button class="tab-btn" onclick="switchDespTab('marketing',this)">Marketing</button>
       <button class="tab-btn" onclick="switchDespTab('cartao',this)">Cartão de crédito</button>
     </div>
-
+ 
     <div id="despTab-fixas">
       <div class="form-card">
         <div class="form-card-title">Adicionar Despesa Fixa</div>
@@ -1004,7 +1160,7 @@
       </div>
       <div class="table-section" id="despFixasList"></div>
     </div>
-
+ 
     <div id="despTab-variaveis" style="display:none;">
       <div class="form-card">
         <div class="form-card-title" id="despVarFormTitle">Nova Despesa Variável</div>
@@ -1048,7 +1204,7 @@
       </div>
       <div class="table-section" id="despVariaveisList"></div>
     </div>
-
+ 
     <div id="despTab-marketing" style="display:none;">
       <div class="table-section" id="despMarketingList"></div>
     </div>
@@ -1057,7 +1213,7 @@
     </div>
   </div>
 </div>
-
+ 
 <!-- TOAST -->
   <!-- PAGE: RELATÓRIOS -->
   <div class="page" id="page-relatorios">
@@ -1065,7 +1221,7 @@
       <h1>Central de <span>Relatórios</span></h1>
       <div class="page-header-sub">Gere PDFs profissionais por tipo, período ou mês — extrato completo ou segmentado</div>
     </div>
-
+ 
     <!-- TIPO DE RELATÓRIO -->
     <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:20px;" id="relTipoGrid">
       <div class="rel-tipo-card" id="rel-completo" onclick="selectRelTipo('completo')">
@@ -1099,7 +1255,7 @@
         <div class="rel-tipo-desc">Receitas de locação com imposto NF por imóvel</div>
       </div>
     </div>
-
+ 
     <!-- PERÍODO -->
     <div class="form-card" id="relPeriodoCard">
       <div class="form-card-title">📅 Período do relatório</div>
@@ -1122,7 +1278,7 @@
         <div id="relPeriodoLabel" style="font-size:12px;color:var(--text2);font-weight:600;"></div>
       </div>
     </div>
-
+ 
     <!-- OPÇÕES COMPACTAS + GERAR PDF (barra horizontal) -->
     <div style="background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);padding:12px 16px;margin-bottom:16px;display:flex;align-items:center;gap:16px;flex-wrap:wrap;">
       <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--text3);flex-shrink:0;">⚙️ Incluir no extrato:</div>
@@ -1138,7 +1294,7 @@
         ⬇ Gerar PDF
       </button>
     </div>
-
+ 
     <!-- EXTRATO AO VIVO — ocupa toda a largura -->
     <div id="relExtratoVivo">
       <div class="empty-state" style="padding:60px 20px;">
@@ -1147,9 +1303,9 @@
       </div>
     </div>
   </div>
-
+ 
 <div class="toast-container" id="toastContainer"></div>
-
+ 
 <!-- MODAL: EDIT DESPESA FIXA -->
 <!-- MODAL: CONFIRM DELETE -->
 <div class="modal-overlay" id="modalConfirmDelete">
@@ -1165,7 +1321,7 @@
     </div>
   </div>
 </div>
-
+ 
 <div class="modal-overlay" id="modalEditFixa">
   <div class="modal">
     <div class="modal-header">
@@ -1191,7 +1347,7 @@
     </div>
   </div>
 </div>
-
+ 
 <script>
 // ============================================================
 // DATA & STATE
@@ -1200,7 +1356,7 @@ const MONTHS = ['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov
 const MONTH_FULL = ['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];
 const COLORS = ['#C9A84C','#4CAF7D','#5B8FD4','#E05252','#E07A3A','#9B6DD4','#3ABDE0','#E0C03A','#85C85A','#C85A9B'];
 const CAT_COLORS = {'Escritório':'#5B8FD4','Serviços':'#C9A84C','Software':'#9B6DD4','Marketing':'#E07A3A','Variáveis':'#4CAF7D','Cartão':'#E05252','Outros':'#AAAAAA','Impostos NF':'#E05252','Custos de Venda':'#9B6DD4'};
-
+ 
 let state = {
   currentYear: new Date().getFullYear(),
   currentMonth: new Date().getMonth(),
@@ -1212,7 +1368,7 @@ let state = {
   socioA: 'Sócio A',
   socioB: 'Sócio B'
 };
-
+ 
 function getKey() { return `imob_data_${state.currentYear}`; }
 function getYearData() {
   if (!state.data[state.currentYear]) {
@@ -1240,18 +1396,18 @@ function defaultYearData() {
     ]
   };
 }
-
+ 
 // ============================================================
 // SUPABASE — configuração
 // ============================================================
 const SUPABASE_URL = 'https://ufqgofxolsxainosojgs.supabase.co';
 const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVmcWdvZnhvbHN4YWlub3NvamdzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzc3NjM5MjcsImV4cCI6MjA5MzMzOTkyN30.C6fK8cSw8Oll_LzeIWlZJsggEpxaUB-bReunc2rqumU';
 const sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-
+ 
 // Fila de saves pendentes para evitar race conditions
 let saveTimeout = null;
 let isSaving = false;
-
+ 
 // Salva tudo no Supabase + localStorage (fallback offline)
 async function saveData() {
   // localStorage sempre (fallback)
@@ -1266,7 +1422,7 @@ async function saveData() {
       localStorage.setItem(`imob_data_${y}`, JSON.stringify(state.data[y]));
     });
   } catch(e) {}
-
+ 
   // Debounce para não sobrecarregar o Supabase
   clearTimeout(saveTimeout);
   saveTimeout = setTimeout(async () => {
@@ -1284,7 +1440,7 @@ async function saveData() {
         },
         updated_at: new Date().toISOString()
       }, { onConflict: 'id' });
-
+ 
       // Salva cada ano com dados
       const upserts = Object.keys(state.data).map(y => ({
         id: `data_${y}`,
@@ -1303,7 +1459,7 @@ async function saveData() {
     }
   }, 800);
 }
-
+ 
 // Carrega do Supabase; se falhar usa localStorage
 async function loadData() {
   // Primeiro carrega localStorage (resposta imediata)
@@ -1321,13 +1477,13 @@ async function loadData() {
       if (d) state.data[y] = JSON.parse(d);
     }
   } catch(e) {}
-
+ 
   // Depois busca do Supabase (fonte de verdade)
   try {
     showSyncStatus('loading');
     const { data, error } = await sb.from('dashboard_data').select('id, value');
     if (error) throw error;
-
+ 
     if (data && data.length > 0) {
       data.forEach(row => {
         if (row.id === 'meta') {
@@ -1360,7 +1516,7 @@ async function loadData() {
     return false;
   }
 }
-
+ 
 function showSyncStatus(status) {
   const el = document.getElementById('syncStatus');
   if (!el) return;
@@ -1375,18 +1531,99 @@ function showSyncStatus(status) {
   el.textContent = txt;
   el.style.color = color;
 }
-
+ 
 function uid() { return Date.now().toString(36) + Math.random().toString(36).slice(2); }
-
+ 
 // ============================================================
 // INIT
 // ============================================================
+// ============================================================
+// AUTENTICAÇÃO — Supabase Auth
+// ============================================================
+let currentUser = null;
+ 
+async function checkSession() {
+  const { data: { session } } = await sb.auth.getSession();
+  if (session) {
+    currentUser = session.user;
+    showDashboard();
+  } else {
+    showLogin();
+  }
+}
+ 
+function showLogin() {
+  document.getElementById('loginScreen').style.display = 'flex';
+  document.querySelector('.sidebar').style.display = 'none';
+  document.querySelector('.main').style.display = 'none';
+}
+ 
+function showDashboard() {
+  document.getElementById('loginScreen').style.display = 'none';
+  document.querySelector('.sidebar').style.display = 'flex';
+  document.querySelector('.main').style.display = 'flex';
+  // Update user badge
+  if (currentUser) {
+    const email = currentUser.email || '';
+    const initial = email.charAt(0).toUpperCase();
+    document.getElementById('userAvatar').textContent = initial;
+    document.getElementById('userEmail').textContent = email;
+    document.getElementById('userBadge').style.display = 'flex';
+  }
+}
+ 
+async function doLogin() {
+  const email = document.getElementById('loginEmail').value.trim();
+  const password = document.getElementById('loginPassword').value;
+  const btn = document.getElementById('loginBtn');
+  const errEl = document.getElementById('loginError');
+ 
+  if (!email || !password) {
+    errEl.textContent = 'Preencha e-mail e senha.';
+    errEl.style.display = 'block';
+    return;
+  }
+ 
+  btn.disabled = true;
+  btn.textContent = 'Entrando...';
+  errEl.style.display = 'none';
+ 
+  const { data, error } = await sb.auth.signInWithPassword({ email, password });
+ 
+  if (error) {
+    errEl.textContent = 'E-mail ou senha incorretos.';
+    errEl.style.display = 'block';
+    btn.disabled = false;
+    btn.textContent = 'Entrar';
+    return;
+  }
+ 
+  currentUser = data.user;
+  showDashboard();
+  await loadData();
+  applyTheme();
+  updateSocioDisplays();
+  buildYearSelector();
+  buildMonthTabs();
+  populateMesSelects();
+  renderAll();
+}
+ 
+async function doLogout() {
+  await sb.auth.signOut();
+  currentUser = null;
+  showLogin();
+  document.getElementById('loginEmail').value = '';
+  document.getElementById('loginPassword').value = '';
+  document.getElementById('userBadge').style.display = 'none';
+}
+ 
 // ============================================================
 // SOCIO NAMES — global, editável, persistido
 // ============================================================
 function getSocioA() { return state.socioA || 'Sócio A'; }
 function getSocioB() { return state.socioB || 'Sócio B'; }
-
+ 
 function updateSocioDisplays() {
   const a = getSocioA(), b = getSocioB();
   const da = document.getElementById('socioADisplay');
@@ -1407,13 +1644,13 @@ function updateSocioDisplays() {
   if (aA && !aA.value) aA.placeholder = a;
   if (aB && !aB.value) aB.placeholder = b;
 }
-
+ 
 function toggleSocioEdit() {
   const box = document.getElementById('socioEditorBox');
   box.classList.add('editing');
   document.getElementById('socioAInput').focus();
 }
-
+ 
 function saveSocioNames() {
   const a = document.getElementById('socioAInput').value.trim();
   const b = document.getElementById('socioBInput').value.trim();
@@ -1425,16 +1662,22 @@ function saveSocioNames() {
   renderAll();
   toast('Nomes dos sócios atualizados!', 'success');
 }
-
+ 
 async function init() {
-  // Renderiza imediatamente com dados locais
+  // Esconde dashboard até confirmar sessão
+  document.querySelector('.sidebar').style.display = 'none';
+  document.querySelector('.main').style.display = 'none';
+  // Verifica se já tem sessão ativa
+  await checkSession();
+  if (!currentUser) return; // Aguarda login
+  // Renderiza com dados locais primeiro
   applyTheme();
   updateSocioDisplays();
   buildYearSelector();
   buildMonthTabs();
   populateMesSelects();
   renderAll();
-  // Carrega do Supabase e re-renderiza com dados da nuvem
+  // Depois carrega do Supabase
   const loaded = await loadData();
   if (loaded) {
     applyTheme();
@@ -1445,7 +1688,7 @@ async function init() {
     renderAll();
   }
 }
-
+ 
 function buildYearSelector() {
   const sel = document.getElementById('yearSelect');
   sel.innerHTML = '';
@@ -1453,7 +1696,7 @@ function buildYearSelector() {
     sel.innerHTML += `<option value="${y}" ${y===state.currentYear?'selected':''}>${y}</option>`;
   }
 }
-
+ 
 function changeYear(y) {
   state.currentYear = parseInt(y);
   saveData();
@@ -1461,7 +1704,7 @@ function changeYear(y) {
   populateMesSelects();
   renderAll();
 }
-
+ 
 function buildMonthTabs() {
   const cont = document.getElementById('monthTabs');
   cont.innerHTML = '';
@@ -1480,7 +1723,7 @@ function buildMonthTabs() {
     cont.appendChild(div);
   });
 }
-
+ 
 function populateMesSelects() {
   ['vMes','aMes','dvMes'].forEach(id => {
     const el = document.getElementById(id);
@@ -1491,7 +1734,7 @@ function populateMesSelects() {
     });
   });
 }
-
+ 
 function applyTheme() {
   document.body.classList.toggle('light-mode', !state.isDark);
   const track = document.getElementById('toggleTrack');
@@ -1507,21 +1750,21 @@ function applyTheme() {
     icon.textContent = '🌙';
   }
 }
-
+ 
 function toggleTheme() {
   state.isDark = !state.isDark;
   applyTheme();
   saveData();
   renderCharts();
 }
-
+ 
 function showPage(p) {
   // Show/hide month tabs (only relevant on mensal page)
   const tabsEl = document.getElementById('monthTabs');
   const pdfBtn = document.querySelector('.topbar-actions');
   if (tabsEl) tabsEl.style.display = p === 'mensal' ? 'flex' : 'none';
   if (pdfBtn) pdfBtn.style.display = p === 'relatorios' ? 'none' : 'flex';
-
+ 
   // Pre-fill socio name fields with global names if not yet typed
   if (p === 'vendas' || p === 'alugueis') {
     ['vSocioANome','aSocioANome'].forEach(id => {
@@ -1543,7 +1786,7 @@ function showPage(p) {
   closeSidebar();
   renderAll();
 }
-
+ 
 function openSidebar() {
   document.getElementById('sidebar').classList.add('open');
   document.getElementById('sidebarOverlay').classList.add('open');
@@ -1552,7 +1795,7 @@ function closeSidebar() {
   document.getElementById('sidebar').classList.remove('open');
   document.getElementById('sidebarOverlay').classList.remove('open');
 }
-
+ 
 // ============================================================
 // COMPUTED DATA
 // ============================================================
@@ -1567,7 +1810,7 @@ function applyDateFilter() {
   renderAll();
   toast('Filtro de período aplicado', 'success');
 }
-
+ 
 function clearDateFilter() {
   state.dateFilter = { start: null, end: null, active: false };
   document.getElementById('filterDateStart').value = '';
@@ -1577,13 +1820,13 @@ function clearDateFilter() {
   renderAll();
   toast('Filtro limpo', 'success');
 }
-
+ 
 function fmtDateBR(str) {
   if (!str) return '';
   const [y,m,d] = str.split('-');
   return `${d}/${m}/${y}`;
 }
-
+ 
 function getMonthsInRange(startStr, endStr) {
   const [sy, sm, sd] = startStr.split('-').map(Number);
   const [ey, em, ed] = endStr.split('-').map(Number);
@@ -1597,7 +1840,7 @@ function getMonthsInRange(startStr, endStr) {
   }
   return months;
 }
-
+ 
 function itemInDateFilter(item, startStr, endStr) {
   // Se item tem data explicita, usa ela
   if (item.data) {
@@ -1616,7 +1859,7 @@ function itemInDateFilter(item, startStr, endStr) {
   }
   return true;
 }
-
+ 
 function getPeriodTotals() {
   if (!state.dateFilter.active) return null;
   const { start, end } = state.dateFilter;
@@ -1624,7 +1867,7 @@ function getPeriodTotals() {
   let receitaVendas = 0, receitaAlugueis = 0;
   let despVarTotal = 0, despFixasTotal = 0;
   let impostosTotal = 0, custosVendas = 0;
-
+ 
   months.forEach(({year, month}) => {
     const yd = state.data[year];
     if (!yd) return;
@@ -1647,13 +1890,13 @@ function getPeriodTotals() {
     const fixas = (yd.despFixas || []);
     despFixasTotal += fixas.reduce((s, f) => s + (f.valor || 0), 0);
   });
-
+ 
   const receitaBruta = receitaVendas + receitaAlugueis;
   const totalDesp = despFixasTotal + despVarTotal + impostosTotal + custosVendas;
   const liquido = receitaBruta - totalDesp;
   return { receitaBruta, receitaVendas, receitaAlugueis, despFixasTotal, despVarTotal, impostosTotal, custosVendas, totalDesp, liquido, months, start, end };
 }
-
+ 
 function getPeriodData() {
   if (!state.dateFilter.active) return null;
   const { start, end } = state.dateFilter;
@@ -1670,7 +1913,7 @@ function getPeriodData() {
   });
   return { vendas, alugueis, despVariaveis, despFixas };
 }
-
+ 
 function getPeriodLists() {
   if (!state.dateFilter.active) return null;
   const { start, end } = state.dateFilter;
@@ -1685,7 +1928,7 @@ function getPeriodLists() {
   });
   return { vendas, alugueis, despVariaveis };
 }
-
+ 
 function getMonthData(m, y) {
   y = y !== undefined ? y : state.currentYear;
   const yd = state.data[y];
@@ -1697,7 +1940,7 @@ function getMonthData(m, y) {
     despFixas: yd.despFixas||[]
   };
 }
-
+ 
 function calcMonthTotals(m, y) {
   const d = getMonthData(m, y);
   // Receita bruta = valores brutos (comissao/valor do aluguel, antes de qualquer desconto)
@@ -1717,7 +1960,7 @@ function calcMonthTotals(m, y) {
   const liquido = receitaBruta - totalDesp;
   return {receitaBruta, receitaVendas, receitaAlugueis, despFixasTotal, despVarTotal, impostosTotal, custosVendas, totalDesp, liquido};
 }
-
+ 
 // ============================================================
 // RENDER ALL
 // ============================================================
@@ -1729,7 +1972,7 @@ function renderAll() {
   renderAlugueisPage();
   renderDespesasPage();
 }
-
+ 
 // ============================================================
 // MENSAL
 // ============================================================
@@ -1740,11 +1983,11 @@ function renderMensal() {
   const t = isPeriod ? period : calcMonthTotals(m);
   const d = isPeriod ? getPeriodData() : getMonthData(m);
   const yd = getYearData();
-
+ 
   document.getElementById('mensalMonthLabel').textContent = isPeriod
     ? `Período: ${fmtDateBR(period.start)} a ${fmtDateBR(period.end)}`
     : `${MONTH_FULL[m]} ${state.currentYear}`;
-
+ 
   // Cards — ticket médio
   const totalOps = d.vendas.length + d.alugueis.length;
   const ticketMedio = totalOps > 0 ? t.receitaBruta / totalOps : 0;
@@ -1761,7 +2004,7 @@ function renderMensal() {
       <div class="card-sub">${d.vendas.length > 0 ? 'Vendas: ' + fmt(ticketVendas) : totalOps === 0 ? 'Sem operações' : 'Só aluguéis'}</div>
     </div>
   `;
-
+ 
   // Tabela vendas
   let vHtml = `<div class="table-header"><div class="table-header-title">Vendas${isPeriod ? ' — Período' : ''}</div></div><div class="table-wrap"><table><thead><tr><th>Imóvel</th><th>Comissão Bruta</th><th>Imposto NF</th><th>Custos Venda</th><th>Líquido</th><th>Observação</th></tr></thead><tbody>`;
   if (d.vendas.length === 0) {
@@ -1781,7 +2024,7 @@ function renderMensal() {
   }
   vHtml += `</tbody></table></div>`;
   document.getElementById('mensalVendasTable').innerHTML = vHtml;
-
+ 
   // Tabela aluguéis
   let aHtml = `<div class="table-header"><div class="table-header-title">Aluguéis${isPeriod ? ' — Período' : ''}</div></div><div class="table-wrap"><table><thead><tr><th>Imóvel</th><th>Valor</th><th>Imposto NF</th><th>Líquido</th><th>Observação</th></tr></thead><tbody>`;
   if (d.alugueis.length === 0) {
@@ -1799,7 +2042,7 @@ function renderMensal() {
   }
   aHtml += `</tbody></table></div>`;
   document.getElementById('mensalAlugueisTable').innerHTML = aHtml;
-
+ 
   // Fixas
   let fHtml = `<div class="table-header"><div class="table-header-title">${isPeriod ? 'Fixas no Período' : 'Fixas do mês'}</div></div>`;
   if (isPeriod) {
@@ -1821,7 +2064,7 @@ function renderMensal() {
   }
   fHtml += `<div class="section-total"><span>Total Fixas${isPeriod ? ' (' + period.months.length + ' meses)' : ''}</span><span style="color:var(--red)">${fmt(t.despFixasTotal)}</span></div>`;
   document.getElementById('mensalFixasTable').innerHTML = fHtml;
-
+ 
   // Variáveis + Impostos + Custos de venda
   let varHtml = `<div class="table-header"><div class="table-header-title">${isPeriod ? 'Variáveis no Período' : 'Variáveis do mês'}</div></div>`;
   // Impostos NF das vendas
@@ -1857,10 +2100,10 @@ function renderMensal() {
   }
   varHtml += `<div class="section-total"><span>Total Variáveis (incl. impostos)</span><span style="color:var(--red)">-${fmt(totalVarCompleto)}</span></div>`;
   document.getElementById('mensalVariaveisTable').innerHTML = varHtml;
-
+ 
   // Painel de sócios mensal
   renderSocioMensalPanel(d, t, isPeriod, period);
-
+ 
   // Donuts (inline, sem re-render)
   const recLabels2 = [...d.vendas.map(v=>v.descricao), ...d.alugueis.map(a=>a.descricao)];
   const recValues2 = [...d.vendas.map(v=>v.comissao||0), ...d.alugueis.map(a=>a.valor||0)];
@@ -1874,18 +2117,18 @@ function renderMensal() {
   const catKeys2 = Object.keys(catMap2);
   drawDonut('donutDespesas', catKeys2.map(k=>catMap2[k]), catKeys2.map(k=>CAT_COLORS[k]||COLORS[catKeys2.indexOf(k)%COLORS.length]), 'legendDespesas', catKeys2, t.totalDesp);
 }
-
+ 
 function renderSocioMensalPanel(d, t, isPeriod, period) {
   const panel = document.getElementById('socioMensalPanel');
   if (!panel) return;
-
+ 
   let socioATotal = 0, socioBTotal = 0;
   let socioANome = getSocioA(), socioBNome = getSocioB();
   let breakdown = [];
-
+ 
   const allVendas = d.vendas || [];
   const allAlugueis = d.alugueis || [];
-
+ 
   // Soma bruta de receitas por sócio
   let aBrutoTotal = 0, bBrutoTotal = 0;
   allVendas.forEach(v => {
@@ -1906,19 +2149,19 @@ function renderSocioMensalPanel(d, t, isPeriod, period) {
       breakdown.push({ label: a.descricao, tipo: 'Aluguel', a: va, b: vb });
     }
   });
-
+ 
   // Deduz 50% das despesas totais do período de cada sócio
   const deducaoSocio = t.totalDesp / 2;
   socioATotal = Math.max(0, aBrutoTotal - deducaoSocio);
   socioBTotal = Math.max(0, bBrutoTotal - deducaoSocio);
-
+ 
   const total = socioATotal + socioBTotal;
-
+ 
   if (aBrutoTotal === 0 && bBrutoTotal === 0) {
     panel.innerHTML = `<div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--text3);margin-bottom:8px;">Distribuição entre Sócios</div><div style="font-size:12px;color:var(--text3);font-style:italic;">Nenhuma divisão registrada${isPeriod?' neste período':' neste mês'}. Informe % dos sócios ao registrar vendas/aluguéis.</div>`;
     return;
   }
-
+ 
   let rowsHtml = '';
   breakdown.forEach(row => {
     rowsHtml += `<div style="display:flex;align-items:center;gap:12px;padding:7px 0;border-bottom:1px solid var(--border);font-size:12px;">
@@ -1928,11 +2171,11 @@ function renderSocioMensalPanel(d, t, isPeriod, period) {
       <div style="width:110px;text-align:right;color:var(--blue);font-weight:600;">${fmt(row.b)}</div>
     </div>`;
   });
-
+ 
   const deducaoNote = deducaoSocio > 0
     ? `<div style="font-size:10px;color:var(--text3);margin-top:8px;padding:6px 10px;background:var(--bg3);border-radius:6px;border-left:2px solid var(--border2);">⚡ Dedução de despesas: cada sócio absorve <strong style="color:var(--red)">−${fmt(deducaoSocio)}</strong> (50% de ${fmt(t.totalDesp)} em despesas do mês)</div>`
     : '';
-
+ 
   panel.innerHTML = `
     <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;">
       <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--text3);">Distribuição entre Sócios — ${isPeriod ? 'Período' : MONTH_FULL[state.currentMonth] + ' ' + state.currentYear}</div>
@@ -1969,7 +2212,7 @@ function renderSocioMensalPanel(d, t, isPeriod, period) {
     </div>` : ''}
   `;
 }
-
+ 
 function renderAnual() {
   const now = new Date();
   const curY = state.currentYear;
@@ -1977,21 +2220,21 @@ function renderAnual() {
   const isCurrentYear = (curY === now.getFullYear());
   const isPastYear = (curY < now.getFullYear());
   const curM = isCurrentYear ? now.getMonth() : (isPastYear ? 11 : -1);
-
+ 
   // Check if date filter is active
   const filterActive = state.dateFilter.active;
-
+ 
   document.getElementById('anualYear').textContent = curY;
   document.getElementById('anualSubtitle').textContent = filterActive
     ? `Filtro: ${fmtDateBR(state.dateFilter.start)} a ${fmtDateBR(state.dateFilter.end)}`
     : `Exercício ${curY}`;
-
+ 
   let totalRec = 0, totalDesp = 0;
   const monthTotals = [];
-
+ 
   for (let m = 0; m <= 11; m++) {
     const t = calcMonthTotals(m, curY);
-
+ 
     // If filter is active, respect filter; otherwise only include months up to curM
     if (!filterActive && m > curM) {
       // Future month: zero out everything so it doesn't pollute totals
@@ -2009,13 +2252,13 @@ function renderAnual() {
   const totalLiq = totalRec - totalDesp;
   const liqSign = totalLiq >= 0 ? '+' : '-';
   const mesesComputados = filterActive ? 12 : (curM + 1);
-
+ 
   const ydAnual = getYearData();
   const totalVendasAno = (ydAnual.vendas||[]).filter(v => !filterActive && v.mes <= curM || filterActive).length;
   const totalAlugueisAno = (ydAnual.alugueis||[]).filter(a => !filterActive && a.mes <= curM || filterActive).length;
   const totalOpsAno = totalVendasAno + totalAlugueisAno;
   const ticketMedioAno = totalOpsAno > 0 ? totalRec / totalOpsAno : 0;
-
+ 
   document.getElementById('anualCards').innerHTML = `
     <div class="card"><div class="card-label">Receita Bruta ${filterActive ? 'Filtrada' : 'Acumulada'}</div><div class="card-value gold">${fmt(totalRec)}</div><div class="card-sub">${filterActive ? 'No período filtrado' : curM >= 0 ? `Jan–${MONTHS[curM]} ${curY}` : `Exercício ${curY}`}</div></div>
     <div class="card"><div class="card-label">Despesas ${filterActive ? 'Filtradas' : 'Acumuladas'}</div><div class="card-value red">${fmt(totalDesp)}</div><div class="card-sub">${filterActive ? 'No período filtrado' : `${mesesComputados} meses computados`}</div></div>
@@ -2027,14 +2270,14 @@ function renderAnual() {
       <div class="card-sub">${totalOpsAno} operação(ões) no período</div>
     </div>
   `;
-
+ 
   // Partner profit panel — anual com histórico mês a mês
   const socioPanel = document.getElementById('socioPanel');
   if (socioPanel) {
     const yd = getYearData();
     let socioATotal = 0, socioBTotal = 0;
     let socioANome = getSocioA(), socioBNome = getSocioB();
-
+ 
     // Coleta por mês — comissões brutas e despesas para dedução (50% cada)
     const mesesData = MONTHS.map((_, mi) => {
       let a = 0, b = 0;
@@ -2051,15 +2294,15 @@ function renderAnual() {
       const bLiq = Math.max(0, b - deducaoSocio);
       return { a: aLiq, b: bLiq, aBruto: a, bBruto: b, deducao: deducaoSocio };
     });
-
+ 
     // Se filtro ativo, só considera meses no filtro; senão até curM
     mesesData.forEach((md, mi) => {
       const skip = !filterActive && mi > curM;
       if (!skip) { socioATotal += md.a; socioBTotal += md.b; }
     });
-
+ 
     const escritorioTotal = socioATotal + socioBTotal;
-
+ 
     let mesRowsHtml = '';
     mesesData.forEach((md, mi) => {
       const isFuture = !filterActive && mi > curM;
@@ -2076,7 +2319,7 @@ function renderAnual() {
         <div style="width:110px;text-align:right;color:var(--gold);font-weight:600;">${fmt(md.a+md.b)}</div>
       </div>`;
     });
-
+ 
     socioPanel.innerHTML = `
       <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;">
         <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--text3);">Distribuição de Resultado — Sócios</div>
@@ -2115,7 +2358,7 @@ function renderAnual() {
       </div>` : `<div style="font-size:12px;color:var(--text3);font-style:italic;">Nenhuma divisão registrada ainda. Informe % dos sócios ao registrar vendas e aluguéis.</div>`}
     `;
   }
-
+ 
   // Bar table
   const maxRec = Math.max(...monthTotals.map(t=>t.receitaBruta), 1);
   let bHtml = '';
@@ -2136,11 +2379,11 @@ function renderAnual() {
     </div>`;
   });
   document.getElementById('anualBarTable').innerHTML = bHtml;
-
+ 
   // Line chart
   drawLineChart(monthTotals, curM);
 }
-
+ 
 function drawDonut(canvasId, values, colors, legendId, labels, total) {
   const canvas = document.getElementById(canvasId);
   if (!canvas) return;
@@ -2170,7 +2413,7 @@ function drawDonut(canvasId, values, colors, legendId, labels, total) {
     ctx.fill();
     angle += sweep;
   });
-
+ 
   let lgHtml = '';
   values.forEach((v, i) => {
     if (v <= 0) return;
@@ -2180,7 +2423,7 @@ function drawDonut(canvasId, values, colors, legendId, labels, total) {
   });
   document.getElementById(legendId).innerHTML = lgHtml;
 }
-
+ 
 function drawLineChart(monthTotals, curM) {
   const canvas = document.getElementById('lineChart');
   if (!canvas) return;
@@ -2188,19 +2431,19 @@ function drawLineChart(monthTotals, curM) {
   const W = canvas.offsetWidth || 800, H = 180;
   canvas.width = W; canvas.height = H;
   ctx.clearRect(0, 0, W, H);
-
+ 
   const pad = {l:50, r:20, t:20, b:30};
   const chartW = W - pad.l - pad.r;
   const chartH = H - pad.t - pad.b;
-
+ 
   const vals = monthTotals.map(t => t.receitaBruta);
   const despVals = monthTotals.map(t => t.totalDesp);
   const max = Math.max(...vals, ...despVals, 1);
-
+ 
   const isDark = state.isDark;
   const textColor = isDark ? '#666' : '#999';
   const gridColor = isDark ? '#222' : '#e8e8e8';
-
+ 
   // Grid
   for (let i = 0; i <= 4; i++) {
     const y = pad.t + chartH - (i / 4) * chartH;
@@ -2215,7 +2458,7 @@ function drawLineChart(monthTotals, curM) {
     ctx.textAlign = 'right';
     ctx.fillText(fmtK(max * i / 4), pad.l - 5, y + 4);
   }
-
+ 
   const xStep = chartW / 11;
   MONTHS.forEach((m, i) => {
     const x = pad.l + i * xStep;
@@ -2224,7 +2467,7 @@ function drawLineChart(monthTotals, curM) {
     ctx.textAlign = 'center';
     ctx.fillText(m, x, H - 8);
   });
-
+ 
   // Receita area - only draw up to curM
   const lastIdx = curM >= 0 ? Math.min(curM, 11) : 11;
   ctx.beginPath();
@@ -2236,7 +2479,7 @@ function drawLineChart(monthTotals, curM) {
   ctx.strokeStyle = '#C9A84C';
   ctx.lineWidth = 2.5;
   ctx.stroke();
-
+ 
   // Despesas area - only draw up to curM
   ctx.beginPath();
   for (let i = 0; i <= lastIdx; i++) {
@@ -2247,7 +2490,7 @@ function drawLineChart(monthTotals, curM) {
   ctx.strokeStyle = '#E05252';
   ctx.lineWidth = 2;
   ctx.stroke();
-
+ 
   // Dots
   for (let i = 0; i <= Math.min(curM, 11); i++) {
     const x = pad.l + i * xStep;
@@ -2257,7 +2500,7 @@ function drawLineChart(monthTotals, curM) {
     ctx.fillStyle = '#C9A84C';
     ctx.fill();
   }
-
+ 
   // Legend
   ctx.font = '11px Inter, sans-serif';
   ctx.textAlign = 'left';
@@ -2266,7 +2509,7 @@ function drawLineChart(monthTotals, curM) {
   ctx.fillStyle = '#E05252';
   ctx.fillText('● Despesas', pad.l + 80, pad.t - 5);
 }
-
+ 
 function renderCharts() {
   // Only redraws donuts without triggering full re-render (avoids flicker loop)
   const period = getPeriodTotals();
@@ -2274,39 +2517,39 @@ function renderCharts() {
   const m = state.currentMonth;
   const d = isPeriod ? getPeriodData() : getMonthData(m);
   const t = isPeriod ? period : calcMonthTotals(m);
-
+ 
   const recLabels = [...d.vendas.map(v=>v.descricao), ...d.alugueis.map(a=>a.descricao)];
   const recValues = [...d.vendas.map(v=>v.liquido||0), ...d.alugueis.map(a=>a.liquido||0)];
   drawDonut('donutReceitas', recValues, COLORS, 'legendReceitas', recLabels, t.receitaBruta);
-
+ 
   const catMap = {};
   d.despFixas.forEach(f => { catMap[f.categoria] = (catMap[f.categoria]||0) + f.valor; });
   d.despVariaveis.forEach(v => { catMap[v.categoria] = (catMap[v.categoria]||0) + v.valor; });
   const catKeys = Object.keys(catMap);
   drawDonut('donutDespesas', catKeys.map(k=>catMap[k]), catKeys.map(k=>CAT_COLORS[k]||COLORS[catKeys.indexOf(k)%COLORS.length]), 'legendDespesas', catKeys, t.totalDesp);
 }
-
+ 
 function fmtK(v) {
   if (v >= 1000) return 'R$' + (v/1000).toFixed(0) + 'k';
   return 'R$' + v.toFixed(0);
 }
-
+ 
 // ============================================================
 // VENDAS
 // ============================================================
 let varCosts = [];
-
+ 
 function addVarCost() {
   varCosts.push({id: uid(), descricao: '', tipo: 'Corretor externo', valor: 0});
   renderVarCosts();
 }
-
+ 
 function removeVarCost(id) {
   varCosts = varCosts.filter(c => c.id !== id);
   renderVarCosts();
   calcVenda();
 }
-
+ 
 function renderVarCosts() {
   const cont = document.getElementById('varCostsList');
   if (varCosts.length === 0) { cont.innerHTML = ''; return; }
@@ -2323,21 +2566,21 @@ function renderVarCosts() {
     </div>
   `).join('');
 }
-
+ 
 function calcVenda() {
   const comissao = parseFloat(document.getElementById('vComissao').value) || 0;
   const impostoPerc = parseFloat(document.getElementById('vImpostoPerc').value) || 0;
   const imposto = comissao * impostoPerc / 100;
   document.getElementById('vImpostoVal').value = imposto.toFixed(2);
-
+ 
   const custosV = varCosts.reduce((s,c) => s + (c.valor||0), 0);
   const liquido = comissao - imposto - custosV;
-
+ 
   const socioAPerc = parseFloat(document.getElementById('vSocioAPerc').value) || 50;
   const socioBPerc = parseFloat(document.getElementById('vSocioBPerc').value) || 50;
   const nomeA = document.getElementById('vSocioANome').value || getSocioA();
   const nomeB = document.getElementById('vSocioBNome').value || getSocioB();
-
+ 
   // Valores manuais (opcionais) — se preenchidos, sobrescrevem a divisão por %
   const manualA = parseFloat(document.getElementById('vSocioAManual').value) || 0;
   const manualB = parseFloat(document.getElementById('vSocioBManual').value) || 0;
@@ -2346,7 +2589,7 @@ function calcVenda() {
   const valB = hasManual ? manualB : (liquido * socioBPerc / 100);
   const labelA = hasManual ? `${nomeA} (manual)` : `${nomeA} (${socioAPerc}%)`;
   const labelB = hasManual ? `${nomeB} (manual)` : `${nomeB} (${socioBPerc}%)`;
-
+ 
   document.getElementById('vendaResultBar').innerHTML = `
     <div class="result-item"><div class="label">Comissão</div><div class="value td-gold">${fmt(comissao)}</div></div>
     <div class="result-item"><div class="label">Imposto</div><div class="value td-red">-${fmt(imposto)}</div></div>
@@ -2354,13 +2597,13 @@ function calcVenda() {
     <div class="result-item"><div class="label">Líquido</div><div class="value td-green">${fmt(liquido)}</div></div>
     <div class="result-item"><div class="label">${labelA}</div><div class="value td-blue">${fmt(valA)}</div></div>
   `;
-
+ 
   document.getElementById('splitInfo').innerHTML = `
     <div class="split-box"><div class="split-box-name">${nomeA}</div><div class="split-box-pct">${hasManual ? fmt(valA) : socioAPerc + '%'}</div><div class="split-box-value">${fmt(valA)}</div></div>
     <div class="split-box"><div class="split-box-name">${nomeB}</div><div class="split-box-pct">${hasManual ? fmt(valB) : socioBPerc + '%'}</div><div class="split-box-value">${fmt(valB)}</div></div>
   `;
 }
-
+ 
 function saveVenda() {
   const descricao = document.getElementById('vDescricao').value.trim();
   const comissao = parseFloat(document.getElementById('vComissao').value) || 0;
@@ -2375,14 +2618,14 @@ function saveVenda() {
   const socioBPerc = parseFloat(document.getElementById('vSocioBPerc').value) || 50;
   const nomeA = document.getElementById('vSocioANome').value || getSocioA();
   const nomeB = document.getElementById('vSocioBNome').value || getSocioB();
-
+ 
   // Valores manuais (opcionais)
   const manualA = parseFloat(document.getElementById('vSocioAManual').value) || 0;
   const manualB = parseFloat(document.getElementById('vSocioBManual').value) || 0;
   const hasManual = manualA > 0 || manualB > 0;
   const valA = hasManual ? manualA : (liquido * socioAPerc / 100);
   const valB = hasManual ? manualB : (liquido * socioBPerc / 100);
-
+ 
   const editingId = document.getElementById('editingVendaId').value;
   const venda = {
     id: editingId || uid(),
@@ -2396,7 +2639,7 @@ function saveVenda() {
     hasManual,
     valA, valB
   };
-
+ 
   const yd = getYearData();
   if (editingId) {
     const idx = yd.vendas.findIndex(v => v.id === editingId);
@@ -2409,7 +2652,7 @@ function saveVenda() {
   renderAll();
   toast(editingId ? 'Venda atualizada!' : 'Venda registrada!', 'success');
 }
-
+ 
 function editVenda(id) {
   const yd = getYearData();
   const v = yd.vendas.find(x => x.id === id);
@@ -2437,11 +2680,11 @@ function editVenda(id) {
   showPage('vendas');
   window.scrollTo({top:0, behavior:'smooth'});
 }
-
+ 
 function cancelEditVenda() {
   resetVendaForm();
 }
-
+ 
 function resetVendaForm() {
   document.getElementById('editingVendaId').value = '';
   document.getElementById('vDescricao').value = '';
@@ -2466,7 +2709,7 @@ function resetVendaForm() {
   document.getElementById('saveVendaBtn').textContent = 'Registrar venda →';
   document.getElementById('cancelVendaBtn').style.display = 'none';
 }
-
+ 
 function confirmDelete(title, msg, onConfirm) {
   document.getElementById('confirmDeleteTitle').textContent = title;
   document.getElementById('confirmDeleteMsg').textContent = msg;
@@ -2474,7 +2717,7 @@ function confirmDelete(title, msg, onConfirm) {
   btn.onclick = () => { closeModal('modalConfirmDelete'); onConfirm(); };
   openModal('modalConfirmDelete');
 }
-
+ 
 function deleteVenda(id) {
   confirmDelete('Excluir venda?', 'Esta ação não pode ser desfeita.', () => {
     // Busca em todos os anos
@@ -2491,7 +2734,7 @@ function deleteVenda(id) {
     toast(found ? 'Venda excluída' : 'Registro não encontrado', found ? 'success' : 'error');
   });
 }
-
+ 
 function renderVendasPage() {
   const yd = getYearData();
   const vendas = yd.vendas || [];
@@ -2517,21 +2760,21 @@ function renderVendasPage() {
   }
   document.getElementById('vendasListTable').innerHTML = h;
 }
-
+ 
 function calcAluguel() {
   const valor = parseFloat(document.getElementById('aValor').value) || 0;
   const impostoPerc = parseFloat(document.getElementById('aImpostoPerc').value) || 0;
   const imposto = valor * impostoPerc / 100;
   document.getElementById('aImpostoVal').value = imposto.toFixed(2);
   const liquido = valor - imposto;
-
+ 
   const socioAPerc = parseFloat(document.getElementById('aSocioAPerc').value) || 50;
   const socioBPerc = parseFloat(document.getElementById('aSocioBPerc').value) || 50;
   const nomeA = document.getElementById('aSocioANome').value || getSocioA();
   const nomeB = document.getElementById('aSocioBNome').value || getSocioB();
   const valA = liquido * socioAPerc / 100;
   const valB = liquido * socioBPerc / 100;
-
+ 
   document.getElementById('aluguelResultBar').innerHTML = `
     <div class="result-item"><div class="label">Valor Bruto</div><div class="value td-blue">${fmt(valor)}</div></div>
     <div class="result-item"><div class="label">Imposto NF</div><div class="value td-red">-${fmt(imposto)}</div></div>
@@ -2539,7 +2782,7 @@ function calcAluguel() {
     <div class="result-item"><div class="label">${nomeA} (${socioAPerc}%)</div><div class="value td-gold">${fmt(valA)}</div></div>
     <div class="result-item"><div class="label">${nomeB} (${socioBPerc}%)</div><div class="value td-gold">${fmt(valB)}</div></div>
   `;
-
+ 
   const splitEl = document.getElementById('aluguelSplitInfo');
   if (splitEl) {
     splitEl.innerHTML = `
@@ -2548,7 +2791,7 @@ function calcAluguel() {
     `;
   }
 }
-
+ 
 function saveAluguel() {
   const descricao = document.getElementById('aDescricao').value.trim();
   const valor = parseFloat(document.getElementById('aValor').value) || 0;
@@ -2557,16 +2800,16 @@ function saveAluguel() {
   const imposto = valor * impostoPerc / 100;
   const liquido = valor - imposto;
   const mes = parseInt(document.getElementById('aMes').value);
-
+ 
   const socioAPerc = parseFloat(document.getElementById('aSocioAPerc').value) || 50;
   const socioBPerc = parseFloat(document.getElementById('aSocioBPerc').value) || 50;
   const nomeA = document.getElementById('aSocioANome').value || getSocioA();
   const nomeB = document.getElementById('aSocioBNome').value || getSocioB();
   const valA = liquido * socioAPerc / 100;
   const valB = liquido * socioBPerc / 100;
-
+ 
   const editingId = document.getElementById('editingAluguelId').value;
-
+ 
   const aluguel = {
     id: editingId || uid(),
     descricao, valor, impostoPerc, imposto, liquido, mes,
@@ -2574,7 +2817,7 @@ function saveAluguel() {
     obs: document.getElementById('aObs').value,
     socioAPerc, socioBPerc, nomeA, nomeB, valA, valB
   };
-
+ 
   const yd = getYearData();
   if (editingId) {
     const idx = yd.alugueis.findIndex(a => a.id === editingId);
@@ -2587,7 +2830,7 @@ function saveAluguel() {
   renderAll();
   toast(editingId ? 'Aluguel atualizado!' : 'Aluguel registrado!', 'success');
 }
-
+ 
 function editAluguel(id) {
   const yd = getYearData();
   const a = yd.alugueis.find(x => x.id === id);
@@ -2611,9 +2854,9 @@ function editAluguel(id) {
   showPage('alugueis');
   window.scrollTo({top:0, behavior:'smooth'});
 }
-
+ 
 function cancelEditAluguel() { resetAluguelForm(); }
-
+ 
 function resetAluguelForm() {
   document.getElementById('editingAluguelId').value = '';
   document.getElementById('aDescricao').value = '';
@@ -2633,7 +2876,7 @@ function resetAluguelForm() {
   document.getElementById('saveAluguelBtn').textContent = 'Registrar aluguel →';
   document.getElementById('cancelAluguelBtn').style.display = 'none';
 }
-
+ 
 function deleteAluguel(id) {
   confirmDelete('Excluir aluguel?', 'Esta ação não pode ser desfeita.', () => {
     let found = false;
@@ -2649,7 +2892,7 @@ function deleteAluguel(id) {
     toast(found ? 'Aluguel excluído' : 'Registro não encontrado', found ? 'success' : 'error');
   });
 }
-
+ 
 function renderAlugueisPage() {
   const yd = getYearData();
   const alugueis = yd.alugueis || [];
@@ -2677,7 +2920,7 @@ function renderAlugueisPage() {
   }
   document.getElementById('alugueisListTable').innerHTML = html;
 }
-
+ 
 // ============================================================
 // DESPESAS
 // ============================================================
@@ -2690,7 +2933,7 @@ function switchDespTab(tab, btn) {
     if (el) el.style.display = t === tab ? '' : 'none';
   });
 }
-
+ 
 function addDespesaFixa() {
   const nome = document.getElementById('dfNome').value.trim();
   const valor = parseFloat(document.getElementById('dfValor').value) || 0;
@@ -2704,7 +2947,7 @@ function addDespesaFixa() {
   renderAll();
   toast('Despesa fixa adicionada!', 'success');
 }
-
+ 
 function deleteFixa(id) {
   confirmDelete('Excluir despesa fixa?', 'Esta despesa será removida permanentemente.', () => {
     const yd = getYearData();
@@ -2714,7 +2957,7 @@ function deleteFixa(id) {
     toast('Despesa fixa removida', 'success');
   });
 }
-
+ 
 function openEditFixa(id) {
   const yd = getYearData();
   const f = yd.despFixas.find(x => x.id === id);
@@ -2725,7 +2968,7 @@ function openEditFixa(id) {
   document.getElementById('editFixaCat').value = f.categoria;
   openModal('modalEditFixa');
 }
-
+ 
 function saveEditFixa() {
   const id = document.getElementById('editFixaId').value;
   const yd = getYearData();
@@ -2742,7 +2985,7 @@ function saveEditFixa() {
   renderAll();
   toast('Despesa fixa atualizada!', 'success');
 }
-
+ 
 function saveDespVar() {
   const descricao = document.getElementById('dvDesc').value.trim();
   const valor = parseFloat(document.getElementById('dvValor').value) || 0;
@@ -2769,7 +3012,7 @@ function saveDespVar() {
   renderAll();
   toast(editingId ? 'Despesa atualizada!' : 'Despesa registrada!', 'success');
 }
-
+ 
 function editDespVar(id) {
   const yd = getYearData();
   const d = yd.despVariaveis.find(x => x.id === id);
@@ -2789,7 +3032,7 @@ function editDespVar(id) {
   document.querySelectorAll('.tab-btn').forEach((b,i) => { if(i===1) b.click(); });
   window.scrollTo({top:0, behavior:'smooth'});
 }
-
+ 
 function cancelEditDespVar() {
   document.getElementById('editingDespVarId').value = '';
   document.getElementById('dvDesc').value = '';
@@ -2800,7 +3043,7 @@ function cancelEditDespVar() {
   document.getElementById('saveDespVarBtn').textContent = 'Registrar despesa →';
   document.getElementById('cancelDespVarBtn').style.display = 'none';
 }
-
+ 
 function deleteDespVar(id) {
   confirmDelete('Excluir despesa?', 'Esta ação não pode ser desfeita.', () => {
     let found = false;
@@ -2816,13 +3059,13 @@ function deleteDespVar(id) {
     toast(found ? 'Despesa excluída' : 'Registro não encontrado', found ? 'success' : 'error');
   });
 }
-
+ 
 function renderDespesasPage() {
   const yd = getYearData();
   const despFixas = yd.despFixas || [];
   const despVar = yd.despVariaveis || [];
   const total = despFixas.reduce((s,f) => s+f.valor, 0);
-
+ 
   // Fixas
   let fHtml = `<div class="table-header"><div class="table-header-title">Despesas Fixas Mensais</div><div class="table-header-title" style="color:var(--red)">${fmt(total)}/mês</div></div>`;
   despFixas.forEach(f => {
@@ -2836,13 +3079,13 @@ function renderDespesasPage() {
   });
   fHtml += `<div class="section-total"><span>Total mensal</span><span style="color:var(--red)">${fmt(total)}</span></div>`;
   document.getElementById('despFixasList').innerHTML = fHtml;
-
+ 
   // Variáveis
   const varAll = despVar.filter(d => d.categoria === 'Variáveis' || d.categoria === 'Marketing' || d.categoria === 'Cartão' || d.categoria === 'Variáveis');
   const catVar = despVar.filter(d => d.categoria === 'Variáveis');
   const catMkt = despVar.filter(d => d.categoria === 'Marketing');
   const catCart = despVar.filter(d => d.categoria === 'Cartão');
-
+ 
   const renderDespVarTable = (list, containerId) => {
     if (list.length === 0) {
       document.getElementById(containerId).innerHTML = `<div class="empty-state"><div class="emoji">📋</div><p>Nenhuma despesa registrada</p></div>`;
@@ -2865,12 +3108,12 @@ function renderDespesasPage() {
     h += `</tbody></table></div><div class="section-total"><span>Total</span><span style="color:var(--red)">-${fmt(total)}</span></div>`;
     document.getElementById(containerId).innerHTML = h;
   };
-
+ 
   renderDespVarTable(despVar, 'despVariaveisList');
   renderDespVarTable(catMkt, 'despMarketingList');
   renderDespVarTable(catCart, 'despCartaoList');
 }
-
+ 
 // ============================================================
 // MODAL
 // ============================================================
@@ -2879,7 +3122,7 @@ function closeModal(id) { document.getElementById(id).classList.remove('open'); 
 document.querySelectorAll('.modal-overlay').forEach(m => {
   m.addEventListener('click', (e) => { if (e.target === m) m.classList.remove('open'); });
 });
-
+ 
 // ============================================================
 // FORMAT
 // ============================================================
@@ -2887,7 +3130,7 @@ function fmt(v) {
   v = v || 0;
   return 'R$\u00A0' + Math.abs(v).toLocaleString('pt-BR', {minimumFractionDigits:2, maximumFractionDigits:2});
 }
-
+ 
 // ============================================================
 // TOAST
 // ============================================================
@@ -2899,7 +3142,7 @@ function toast(msg, type='success') {
   cont.appendChild(el);
   setTimeout(() => el.remove(), 3500);
 }
-
+ 
 // ============================================================
 // PDF EXPORT
 // ============================================================
@@ -2907,17 +3150,17 @@ async function exportPDF() {
   toast('Gerando PDF...', 'success');
   const { jsPDF } = window.jspdf;
   const doc = new jsPDF({ orientation: 'landscape', unit: 'mm', format: 'a4' });
-
+ 
   const isPeriod = state.dateFilter.active;
   const m = state.currentMonth;
   const t = isPeriod ? getPeriodTotals() : calcMonthTotals(m);
   const d = isPeriod ? getPeriodData() : getMonthData(m);
   const yd = getYearData();
-
+ 
   const periodLabel = isPeriod
     ? `Período: ${fmtDateBR(state.dateFilter.start)} a ${fmtDateBR(state.dateFilter.end)}`
     : `${MONTH_FULL[m]} ${state.currentYear}`;
-
+ 
   doc.setFillColor(15,15,15);
   doc.rect(0,0,297,210,'F');
   doc.setTextColor(201,168,76);
@@ -2928,7 +3171,7 @@ async function exportPDF() {
   doc.setFontSize(10);
   doc.text(periodLabel, 20, 30);
   doc.text(`Exportado em ${new Date().toLocaleDateString('pt-BR')}`, 200, 30);
-
+ 
   // Cards
   const liqSign = t.liquido >= 0 ? '+' : '-';
   const cards = [
@@ -2949,7 +3192,7 @@ async function exportPDF() {
     doc.setFont('helvetica','bold');
     doc.text(val, x+4, 54);
   });
-
+ 
   // Vendas table
   doc.setTextColor(120,120,120);
   doc.setFontSize(8);
@@ -2975,7 +3218,7 @@ async function exportPDF() {
     });
     yp += 6;
   });
-
+ 
   // Despesas fixas
   yp += 5;
   doc.setTextColor(120,120,120);
@@ -2992,18 +3235,18 @@ async function exportPDF() {
     yp += 5;
     if (yp > 195) yp = 195;
   });
-
+ 
   doc.setTextColor(t.liquido>=0?[76,175,125]:[224,82,82]);
   doc.setFontSize(9);
   doc.text(`Resultado: ${t.liquido>=0?'+':'-'}${fmt(Math.abs(t.liquido))}`, 200, 200);
-
+ 
   const filename = isPeriod
     ? `imobiliaria_periodo_${state.dateFilter.start}_${state.dateFilter.end}.pdf`
     : `imobiliaria_${MONTH_FULL[m]}_${state.currentYear}.pdf`;
   doc.save(filename);
   toast('PDF exportado!', 'success');
 }
-
+ 
 // ============================================================
 // RELATÓRIOS — Central de PDFs
 // ============================================================
@@ -3013,7 +3256,7 @@ const relState = {
   dateStart: null,
   dateEnd: null
 };
-
+ 
 function selectRelTipo(tipo) {
   relState.tipo = tipo;
   document.querySelectorAll('.rel-tipo-card').forEach(c => c.classList.remove('selected'));
@@ -3033,7 +3276,7 @@ function selectRelTipo(tipo) {
   opt('relOptObs', isRec);
   atualizarPreview();
 }
-
+ 
 function setRelPeriod(p, btn) {
   relState.periodo = p;
   document.querySelectorAll('.rel-period-btn').forEach(b => b.classList.remove('active-period'));
@@ -3072,16 +3315,16 @@ function setRelPeriod(p, btn) {
   }
   atualizarPreview();
 }
-
+ 
 function atualizarPreview() {
   const container = document.getElementById('relExtratoVivo');
   if (!container) return;
-
+ 
   if (!relState.dateStart || !relState.dateEnd || !relState.tipo) {
     container.innerHTML = `<div class="empty-state" style="padding:60px 20px;"><div class="emoji">📋</div><p>Selecione um tipo de relatório e período para visualizar o extrato</p></div>`;
     return;
   }
-
+ 
   const opts = {
     mesAMes:   document.getElementById('relOptMesAMes')?.checked,
     socios:    document.getElementById('relOptSocios')?.checked,
@@ -3090,10 +3333,10 @@ function atualizarPreview() {
     impostos:  document.getElementById('relOptImpostos')?.checked,
     obs:       document.getElementById('relOptObs')?.checked
   };
-
+ 
   const tipo = relState.tipo;
   const data = coletarDadosPeriodo(relState.dateStart, relState.dateEnd);
-
+ 
   const recVendas   = data.vendas.reduce((s,v)=>s+(v.comissao||0),0);
   const recAlugueis = data.alugueis.reduce((s,a)=>s+(a.valor||0),0);
   const recBruta    = recVendas + recAlugueis;
@@ -3105,9 +3348,9 @@ function atualizarPreview() {
   const liq         = recBruta - totalDesp;
   const sign        = v => v >= 0 ? '+' : '-';
   const periodoStr  = `${relState.dateStart.toLocaleDateString('pt-BR')} a ${relState.dateEnd.toLocaleDateString('pt-BR')}`;
-
+ 
   const tipoLabels = {completo:'Relatório Completo',receitas:'Extrato de Receitas',despesas:'Extrato de Despesas',socios:'Relatório de Sócios',vendas:'Extrato de Vendas',alugueis:'Extrato de Aluguéis'};
-
+ 
   // Helper builders
   function secao(titulo, totalLabel, totalVal, totalColor, linhas) {
     if (!linhas) return '';
@@ -3119,7 +3362,7 @@ function atualizarPreview() {
       ${linhas}
     </div>`;
   }
-
+ 
   function linhaItem(main, sub, tag, val, val2, idx, valColor) {
     return `<div class="extrato-row${idx%2===1?' stripe':''}">
       <div style="flex:1;min-width:0;">
@@ -3131,24 +3374,24 @@ function atualizarPreview() {
       <div class="extrato-col-val" style="color:${valColor||'var(--text)'}">${val}</div>
     </div>`;
   }
-
+ 
   function linhaTotal(label, val, color) {
     return `<div class="extrato-row total-row">
       <div style="flex:1;font-weight:700;color:var(--text2)">${label}</div>
       <div class="extrato-col-val" style="color:${color||'var(--gold)'}">${val}</div>
     </div>`;
   }
-
+ 
   function badge(txt, color) {
     return `<span class="badge" style="background:${color}20;color:${color};font-size:9px;">${txt}</span>`;
   }
-
+ 
   function mesLabel(rec) {
     return MONTHS[rec.mes] + (rec._year && rec._year !== state.currentYear ? ' '+rec._year : '');
   }
-
+ 
   let html = '';
-
+ 
   // ── SUMMARY CARDS ──────────────────────────────────────────────────────────
   const showRec  = ['completo','receitas','vendas','alugueis','socios'].includes(tipo);
   const showDesp = ['completo','despesas'].includes(tipo);
@@ -3163,7 +3406,7 @@ function atualizarPreview() {
     cards.push({lbl:'Operações', val: String(data.vendas.length+data.alugueis.length), color:'var(--text)'});
     html += `<div class="extrato-summary-cards">${cards.map(c=>`<div class="extrato-summary-card"><div class="lbl">${c.lbl}</div><div class="val" style="color:${c.color}">${c.val}</div></div>`).join('')}</div>`;
   }
-
+ 
   // ── VENDAS ─────────────────────────────────────────────────────────────────
   if (['completo','receitas','vendas'].includes(tipo) && data.vendas.length > 0) {
     // Group by month if mesAMes
@@ -3184,7 +3427,7 @@ function atualizarPreview() {
     linhas += linhaTotal(`Total (${data.vendas.length} venda${data.vendas.length!==1?'s':''})`, fmt(totalV), 'var(--gold)');
     html += secao('Vendas', 'Total', fmt(totalV), 'var(--gold)', linhas);
   }
-
+ 
   // ── ALUGUÉIS ──────────────────────────────────────────────────────────────
   if (['completo','receitas','alugueis'].includes(tipo) && data.alugueis.length > 0) {
     const groups = opts.mesAMes ? agruparPorMes(data.alugueis) : [{ label: null, items: data.alugueis }];
@@ -3201,7 +3444,7 @@ function atualizarPreview() {
     linhas += linhaTotal(`Total (${data.alugueis.length} aluguel/eis)`, fmt(totalA), 'var(--blue)');
     html += secao('Aluguéis', 'Total', fmt(totalA), 'var(--blue)', linhas);
   }
-
+ 
   // ── DESPESAS FIXAS ────────────────────────────────────────────────────────
   if (['completo','despesas'].includes(tipo) && opts.despFixas && data.mesesFixas.length > 0) {
     const fixas = data.mesesFixas[0]?.fixas || [];
@@ -3217,7 +3460,7 @@ function atualizarPreview() {
     linhas += linhaTotal(`Total fixas (${mesesCount} mês${mesesCount!==1?'es':''})`, `-${fmt(despFix)}`, 'var(--red)');
     html += secao(`Despesas Fixas`, 'Total', `-${fmt(despFix)}`, 'var(--red)', linhas);
   }
-
+ 
   // ── DESPESAS VARIÁVEIS ────────────────────────────────────────────────────
   if (['completo','despesas'].includes(tipo) && opts.despVar && data.despVariaveis.length > 0) {
     const groups = opts.mesAMes ? agruparPorMes(data.despVariaveis) : [{ label: null, items: data.despVariaveis }];
@@ -3234,7 +3477,7 @@ function atualizarPreview() {
     linhas += linhaTotal(`Total variáveis (${data.despVariaveis.length})`, `-${fmt(totalDV)}`, 'var(--red)');
     html += secao('Despesas Variáveis', 'Total', `-${fmt(totalDV)}`, 'var(--red)', linhas);
   }
-
+ 
   // ── IMPOSTOS NF ───────────────────────────────────────────────────────────
   if (opts.impostos && impostos > 0 && ['completo','despesas','receitas','vendas','alugueis'].includes(tipo)) {
     let linhas = '';
@@ -3254,7 +3497,7 @@ function atualizarPreview() {
       html += secao('Impostos NF', 'Total', `-${fmt(totalImp)}`, 'var(--red)', linhas);
     }
   }
-
+ 
   // ── MÊS A MÊS ─────────────────────────────────────────────────────────────
   if (opts.mesAMes && ['completo','receitas','despesas'].includes(tipo)) {
     const byMonth = {};
@@ -3284,7 +3527,7 @@ function atualizarPreview() {
       html += secao('Resumo mês a mês', 'Resultado', (tL>=0?'+':'-')+fmt(Math.abs(tL)), tL>=0?'var(--green)':'var(--red)', linhas);
     }
   }
-
+ 
   // ── SÓCIOS ────────────────────────────────────────────────────────────────
   if (opts.socios && ['completo','receitas','socios'].includes(tipo)) {
     let aBruto=0, bBruto=0;
@@ -3329,15 +3572,15 @@ function atualizarPreview() {
     }
     html += secao('Distribuição entre Sócios', getSocioA()+' + '+getSocioB(), fmt(aLiq+bLiq), 'var(--gold)', linhas);
   }
-
+ 
   // ── EMPTY ──────────────────────────────────────────────────────────────────
   if (!html) {
     html = `<div class="empty-state" style="padding:60px 20px;"><div class="emoji">🔍</div><p>Nenhum dado encontrado para o período e tipo selecionado</p></div>`;
   }
-
+ 
   container.innerHTML = html;
 }
-
+ 
 // Agrupa lista de registros por mês para exibição mês a mês
 function agruparPorMes(lista) {
   const map = {};
@@ -3349,7 +3592,7 @@ function agruparPorMes(lista) {
   });
   return Object.keys(map).sort().map(k => map[k]);
 }
-
+ 
 // Coleta todos os registros dentro do range, de todos os anos
 function coletarDadosPeriodo(inicio, fim) {
   const result = { vendas: [], alugueis: [], despVariaveis: [], mesesFixas: [] };
@@ -3372,7 +3615,7 @@ function coletarDadosPeriodo(inicio, fim) {
   }
   return result;
 }
-
+ 
 function recDate(rec, y) {
   if (rec.data && rec.data.length >= 10) {
     const [yr,mo,da] = rec.data.split('-');
@@ -3380,16 +3623,16 @@ function recDate(rec, y) {
   }
   return new Date(y || rec._year || new Date().getFullYear(), rec.mes||0, 1);
 }
-
+ 
 // ── PDF BUILDER ────────────────────────────────────────────────────────────────
 function gerarPDF() {
   if (!relState.dateStart || !relState.dateEnd) { toast('Selecione um período', 'error'); return; }
   toast('Gerando PDF...', 'success');
   const { jsPDF } = window.jspdf;
-
+ 
   const tipo = relState.tipo;
   const data = coletarDadosPeriodo(relState.dateStart, relState.dateEnd);
-
+ 
   const recBruta = data.vendas.reduce((s,v)=>s+(v.comissao||0),0)
                  + data.alugueis.reduce((s,a)=>s+(a.valor||0),0);
   const impostos = data.vendas.reduce((s,v)=>s+(v.imposto||0),0)
@@ -3399,7 +3642,7 @@ function gerarPDF() {
   const despFix  = data.mesesFixas.reduce((s,mf)=>s+mf.total,0);
   const totalDesp = despFix + despVar + impostos + custosV;
   const liq = recBruta - totalDesp;
-
+ 
   const opts = {
     mesAMes:   document.getElementById('relOptMesAMes').checked,
     socios:    document.getElementById('relOptSocios').checked,
@@ -3408,13 +3651,13 @@ function gerarPDF() {
     impostos:  document.getElementById('relOptImpostos').checked,
     obs:       document.getElementById('relOptObs').checked
   };
-
+ 
   const tipoLabels = {
     completo:'Relatório Completo', receitas:'Extrato de Receitas',
     despesas:'Extrato de Despesas', socios:'Relatório de Sócios',
     vendas:'Extrato de Vendas', alugueis:'Extrato de Aluguéis'
   };
-
+ 
   const doc = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4' });
   const W = 210, PL = 15, PR = 15, CW = W - PL - PR;
   const isDark = state.isDark;
@@ -3428,20 +3671,20 @@ function gerarPDF() {
   const GREEN = [76,175,125];
   const RED   = [224,82,82];
   const BLUE  = [91,143,212];
-
+ 
   let curPage = 1, totalPages = '?';
-
+ 
   function newPage() {
     doc.addPage();
     curPage++;
     drawPageHeader();
   }
-
+ 
   function ensureSpace(needed, curY) {
     if (curY + needed > 277) { newPage(); return 20; }
     return curY;
   }
-
+ 
   function drawPageHeader() {
     doc.setFillColor(...BG); doc.rect(0,0,210,297,'F');
     doc.setFillColor(...BG2); doc.rect(0,0,210,14,'F');
@@ -3453,7 +3696,7 @@ function gerarPDF() {
     doc.setDrawColor(...isDark?[40,40,40]:[220,220,220]); doc.setLineWidth(0.3);
     doc.line(0, 13, 210, 13);
   }
-
+ 
   function sectionTitle(txt, y) {
     doc.setFillColor(...BG3); doc.rect(PL, y-4, CW, 7, 'F');
     doc.setTextColor(...GOLD); doc.setFontSize(8); doc.setFont('helvetica','bold');
@@ -3461,7 +3704,7 @@ function gerarPDF() {
     doc.setFont('helvetica','normal');
     return y + 7;
   }
-
+ 
   function cardRow(items, y) {
     // items: [{label, value, color}]
     const w = CW / items.length;
@@ -3475,7 +3718,7 @@ function gerarPDF() {
     });
     return y + 18;
   }
-
+ 
   function tableHead(cols, y) {
     // cols: [{label, w, align}]
     doc.setFillColor(...isDark?[25,25,25]:[235,235,235]);
@@ -3489,7 +3732,7 @@ function gerarPDF() {
     });
     return y + 5;
   }
-
+ 
   function tableRow(cols, vals, y, stripe) {
     if (stripe) { doc.setFillColor(...isDark?[19,19,19]:[247,247,247]); doc.rect(PL, y-3, CW, 6, 'F'); }
     let x = PL;
@@ -3502,7 +3745,7 @@ function gerarPDF() {
     });
     return y + 6;
   }
-
+ 
   function totalRow(label, value, y, color) {
     doc.setFillColor(...(isDark?[28,28,28]:[238,238,238]));
     doc.rect(PL, y-3, CW, 6, 'F');
@@ -3512,16 +3755,16 @@ function gerarPDF() {
     doc.text(value, W-PR-1, y, {align:'right'});
     return y + 8;
   }
-
+ 
   function separator(y) {
     doc.setDrawColor(...isDark?[35,35,35]:[215,215,215]); doc.setLineWidth(0.2);
     doc.line(PL, y, W-PR, y);
     return y + 4;
   }
-
+ 
   // ── START BUILDING ──────────────────────────────────────────────────────────
   doc.setFillColor(...BG); doc.rect(0,0,210,297,'F');
-
+ 
   // Cover header
   doc.setFillColor(...BG2); doc.rect(0,0,210,40,'F');
   doc.setTextColor(...GOLD); doc.setFontSize(20); doc.setFont('helvetica','bold');
@@ -3533,13 +3776,13 @@ function gerarPDF() {
   doc.text(`${getSocioA()} & ${getSocioB()} · Gerado em ${new Date().toLocaleDateString('pt-BR')} às ${new Date().toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'})}`, PL, 33);
   doc.setDrawColor(...GOLD); doc.setLineWidth(0.5);
   doc.line(PL, 39, W-PR, 39);
-
+ 
   let y = 50;
-
+ 
   // ── CARDS RESUMO ──────────────────────────────────────────────────────────
   const showRec  = ['completo','receitas','vendas','alugueis','socios'].includes(tipo);
   const showDesp = ['completo','despesas'].includes(tipo);
-
+ 
   if (showRec || showDesp) {
     const sign = liq >= 0 ? '+' : '-';
     let cardItems = [];
@@ -3550,7 +3793,7 @@ function gerarPDF() {
     y = cardRow(cardItems, y);
     y += 4;
   }
-
+ 
   // ── VENDAS ────────────────────────────────────────────────────────────────
   if (['completo','receitas','vendas'].includes(tipo) && data.vendas.length > 0) {
     y = ensureSpace(30, y);
@@ -3572,7 +3815,7 @@ function gerarPDF() {
     y = totalRow('Total Vendas', fmt(totalVendas), y, GOLD);
     y = separator(y);
   }
-
+ 
   // ── ALUGUÉIS ──────────────────────────────────────────────────────────────
   if (['completo','receitas','alugueis'].includes(tipo) && data.alugueis.length > 0) {
     y = ensureSpace(30, y);
@@ -3589,7 +3832,7 @@ function gerarPDF() {
     y = totalRow('Total Aluguéis', fmt(totalAlug), y, BLUE);
     y = separator(y);
   }
-
+ 
   // ── DESPESAS FIXAS ────────────────────────────────────────────────────────
   if (['completo','despesas'].includes(tipo) && opts.despFixas && data.mesesFixas.length > 0) {
     y = ensureSpace(30, y);
@@ -3608,7 +3851,7 @@ function gerarPDF() {
     y = totalRow('Total Fixas no Período', '-'+fmt(totalFixasPeriodo), y, RED);
     y = separator(y);
   }
-
+ 
   // ── DESPESAS VARIÁVEIS ───────────────────────────────────────────────────
   if (['completo','despesas'].includes(tipo) && opts.despVar && data.despVariaveis.length > 0) {
     y = ensureSpace(30, y);
@@ -3624,7 +3867,7 @@ function gerarPDF() {
     y = totalRow('Total Variáveis', '-'+fmt(totalDV), y, RED);
     y = separator(y);
   }
-
+ 
   // ── IMPOSTOS NF ───────────────────────────────────────────────────────────
   if (opts.impostos && impostos > 0 && ['completo','despesas','receitas','vendas','alugueis'].includes(tipo)) {
     y = ensureSpace(30, y);
@@ -3645,7 +3888,7 @@ function gerarPDF() {
     y = totalRow('Total Impostos NF', '-'+fmt(impostos), y, RED);
     y = separator(y);
   }
-
+ 
   // ── MÊS A MÊS ─────────────────────────────────────────────────────────────
   if (opts.mesAMes && ['completo','receitas','despesas'].includes(tipo)) {
     // Group data by year-month
@@ -3681,7 +3924,7 @@ function gerarPDF() {
       y = separator(y);
     }
   }
-
+ 
   // ── SÓCIOS ────────────────────────────────────────────────────────────────
   if (opts.socios && ['completo','receitas','socios'].includes(tipo)) {
     y = ensureSpace(40, y);
@@ -3716,7 +3959,7 @@ function gerarPDF() {
     }
     y = separator(y);
   }
-
+ 
   // ── RODAPÉ ────────────────────────────────────────────────────────────────
   const pageCount = doc.internal.getNumberOfPages();
   for (let i = 1; i <= pageCount; i++) {
@@ -3740,7 +3983,7 @@ function gerarPDF() {
       doc.line(0,13,210,13);
     }
   }
-
+ 
   // filename
   const tipoSlug = tipo;
   const di = relState.dateStart.toISOString().slice(0,10);
@@ -3748,14 +3991,14 @@ function gerarPDF() {
   doc.save(`imobiliaria_${tipoSlug}_${di}_${df}.pdf`);
   toast('PDF gerado com sucesso!', 'success');
 }
-
+ 
 // ============================================================
 // START
 // ============================================================
 window.addEventListener('resize', () => {
   if (state.currentPage === 'anual') renderAnual();
 });
-
+ 
 init().catch(console.error);
 </script>
 </body>
