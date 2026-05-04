@@ -1742,7 +1742,6 @@ function buildMonthTabs() {
     div.textContent = m;
     div.onclick = () => {
       state.currentMonth = i;
-      // ao clicar no mês, limpa o filtro de período
       clearDateFilter();
       buildMonthTabs();
       populateMesSelects();
@@ -1921,9 +1920,9 @@ function getPeriodTotals() {
  
   const receitaBruta = receitaVendas + receitaAlugueis;
   const totalDesp = despFixasTotal + despVarTotal + impostosTotal + custosVendas;
-  const despSemImpostos = despFixasTotal + despVarTotal + custosVendas;
+  const despParaSocios = despFixasTotal + despVarTotal;
   const liquido = receitaBruta - totalDesp;
-  return { receitaBruta, receitaVendas, receitaAlugueis, despFixasTotal, despVarTotal, impostosTotal, custosVendas, totalDesp, despSemImpostos, liquido, months, start, end };
+  return { receitaBruta, receitaVendas, receitaAlugueis, despFixasTotal, despVarTotal, impostosTotal, custosVendas, totalDesp, despParaSocios, liquido, months, start, end };
 }
  
 function getPeriodData() {
@@ -1966,7 +1965,7 @@ function getMonthData(m, y) {
     vendas: (yd.vendas||[]).filter(v => v.mes == m),
     alugueis: (yd.alugueis||[]).filter(a => a.mes == m),
     despVariaveis: (yd.despVariaveis||[]).filter(d => d.mes == m),
-    despFixas: getFixasDoMes(yd, m)  // snapshot correto do mês
+    despFixas: getFixasDoMes(yd, m)
   };
 }
  
@@ -1984,12 +1983,15 @@ function calcMonthTotals(m, y) {
   const custosVendas = d.vendas.reduce((s,v) => s + (v.custosVariaveis||[]).reduce((ss,c)=>ss+(c.valor||0),0), 0);
   const despFixasTotal = d.despFixas.reduce((s,f) => s + (f.valor||0), 0);
   const despVarTotal = d.despVariaveis.reduce((s,v) => s + (v.valor||0), 0);
-  // totalDesp inclui: fixas + variáveis lançadas + impostos NF + custos variáveis de venda
+  // totalDesp inclui tudo (para resultado geral do escritório)
   const totalDesp = despFixasTotal + despVarTotal + impostosTotal + custosVendas;
-  // despSemImpostos: para dedução dos sócios — impostos já retidos na fonte
-  const despSemImpostos = despFixasTotal + despVarTotal + custosVendas;
+  // despParaSocios: BASE de dedução dos sócios
+  // = só fixas + variáveis manuais lançadas
+  // NF já descontada no lançamento (retida na fonte)
+  // Custos de venda já descontados no valA/valB do lançamento
+  const despParaSocios = despFixasTotal + despVarTotal;
   const liquido = receitaBruta - totalDesp;
-  return {receitaBruta, receitaVendas, receitaAlugueis, despFixasTotal, despVarTotal, impostosTotal, custosVendas, totalDesp, despSemImpostos, liquido};
+  return {receitaBruta, receitaVendas, receitaAlugueis, despFixasTotal, despVarTotal, impostosTotal, custosVendas, totalDesp, despParaSocios, liquido};
 }
  
 // ============================================================
@@ -2181,8 +2183,10 @@ function renderSocioMensalPanel(d, t, isPeriod, period) {
     }
   });
  
-  // Deduz 50% SEM impostos NF (já retidos na fonte, já descontados no valA/valB)
-  const deducaoSocio = (t.despSemImpostos !== undefined ? t.despSemImpostos : t.totalDesp) / 2;
+  // Dedução = 50% fixas + 50% variáveis manuais (NF e custos já no lançamento)
+  const deducaoSocio = (t.despParaSocios !== undefined
+    ? t.despParaSocios
+    : (t.despFixasTotal + t.despVarTotal)) / 2;
   socioATotal = Math.max(0, aBrutoTotal - deducaoSocio);
   socioBTotal = Math.max(0, bBrutoTotal - deducaoSocio);
  
@@ -2203,9 +2207,9 @@ function renderSocioMensalPanel(d, t, isPeriod, period) {
     </div>`;
   });
  
-  const _baseDed = t.despSemImpostos !== undefined ? t.despSemImpostos : t.totalDesp;
+  const _baseDeducao = t.despParaSocios !== undefined ? t.despParaSocios : (t.despFixasTotal + t.despVarTotal);
   const deducaoNote = deducaoSocio > 0
-    ? `<div style="font-size:10px;color:var(--text3);margin-top:8px;padding:6px 10px;background:var(--bg3);border-radius:6px;border-left:2px solid var(--border2);">⚡ Dedução: cada sócio absorve <strong style="color:var(--red)">−${fmt(deducaoSocio)}</strong> (50% de ${fmt(_baseDed)} — fixas + variáveis, sem impostos NF)</div>`
+    ? `<div style="font-size:10px;color:var(--text3);margin-top:8px;padding:6px 10px;background:var(--bg3);border-radius:6px;border-left:2px solid var(--border2);">⚡ Dedução: <strong style="color:var(--red)">−${fmt(deducaoSocio)}</strong> por sócio (50% de ${fmt(_baseDeducao)} em fixas + variáveis — NF e custos de venda já descontados no lançamento)</div>`
     : '';
  
   panel.innerHTML = `
@@ -2323,9 +2327,11 @@ function renderAnual() {
       (yd.alugueis || []).forEach(al => {
         if (al.mes === mi) { a += al.valA || 0; b += al.valB || 0; if (al.nomeA) socioANome = al.nomeA; if (al.nomeB) socioBNome = al.nomeB; }
       });
-      // Deduz 50% SEM impostos NF (já retidos na fonte)
-      const _totMes = calcMonthTotals(mi, curY);
-      const despMes = _totMes.despSemImpostos !== undefined ? _totMes.despSemImpostos : _totMes.totalDesp;
+      // Dedução = 50% fixas + 50% var manuais (NF e custos já no lançamento)
+      const _mt = calcMonthTotals(mi, curY);
+      const despMes = _mt.despParaSocios !== undefined
+        ? _mt.despParaSocios
+        : (_mt.despFixasTotal + _mt.despVarTotal);
       const deducaoSocio = despMes / 2;
       const aLiq = Math.max(0, a - deducaoSocio);
       const bLiq = Math.max(0, b - deducaoSocio);
@@ -3594,8 +3600,8 @@ function atualizarPreview() {
     const rows = [];
     data.vendas.forEach(v => { const a=v.valA||0,b=v.valB||0; if(a>0||b>0){aBruto+=a;bBruto+=b;rows.push({label:v.descricao,tipo:'Venda',mes:mesLabel(v),a,b});} });
     data.alugueis.forEach(al => { const a=al.valA||0,b=al.valB||0; if(a>0||b>0){aBruto+=a;bBruto+=b;rows.push({label:al.descricao,tipo:'Aluguel',mes:mesLabel(al),a,b});} });
-    const despParaSocios = despFix + despVar + custosV;
-    const deducao = despParaSocios / 2;
+    const _baseSocios = despFix + despVar; // só fixas + var manuais
+    const deducao = _baseSocios / 2;
     const aLiq = Math.max(0, aBruto - deducao);
     const bLiq = Math.max(0, bBruto - deducao);
     let linhas = '';
@@ -3617,7 +3623,7 @@ function atualizarPreview() {
       </div>
     </div>
     <div style="padding:6px 14px 4px;font-size:10px;color:var(--text3);background:var(--bg3);border-top:1px solid var(--border);">
-      ⚡ Dedução de <strong style="color:var(--red)">${fmt(deducao)}</strong> por sócio (50% de ${fmt(despParaSocios)} — fixas + variáveis, sem impostos NF)
+      ⚡ Dedução de <strong style="color:var(--red)">${fmt(deducao)}</strong> por sócio (50% de ${fmt(_baseSocios)} — fixas + variáveis manuais)
     </div>`;
     if (rows.length > 0) {
       linhas += `<div class="extrato-thead" style="margin-top:0;"><div style="flex:1">Item</div><div style="width:60px">Tipo</div><div style="width:110px;text-align:right;color:var(--green)">${getSocioA()}</div><div style="width:110px;text-align:right;color:var(--blue)">${getSocioB()}</div></div>`;
@@ -4006,8 +4012,8 @@ function gerarPDF() {
       const va=a.valA||0, vb=a.valB||0;
       if (va>0||vb>0) { aTot+=va; bTot+=vb; splitRows.push([a.descricao,'Aluguel',MONTHS[a.mes],fmt(va),fmt(vb)]); }
     });
-    const despParaSociosPDF = despFix + despVar + custosV;
-    const deducaoTotal = despParaSociosPDF / 2;
+    const _baseSociosPDF = despFix + despVar; // só fixas + var manuais
+    const deducaoTotal = _baseSociosPDF / 2;
     const aLiq = Math.max(0, aTot - deducaoTotal);
     const bLiq = Math.max(0, bTot - deducaoTotal);
     // Summary cards
@@ -4015,7 +4021,7 @@ function gerarPDF() {
       {label:getSocioA()+' (líquido)', value:fmt(aLiq), color:GREEN},
       {label:getSocioB()+' (líquido)', value:fmt(bLiq), color:BLUE},
       {label:'Escritório Total', value:fmt(aLiq+bLiq), color:GOLD},
-      {label:'Dedução (50% desp.)', value:'-'+fmt(deducaoTotal), color:RED}
+      {label:'Dedução (fixas+var)', value:'-'+fmt(deducaoTotal), color:RED}
     ], y);
     y += 3;
     if (splitRows.length > 0) {
@@ -4070,4 +4076,3 @@ init().catch(console.error);
 </script>
 </body>
 </html>
- 
