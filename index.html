@@ -779,6 +779,38 @@
   .chip { display: inline-flex; align-items: center; gap: 4px; padding: 2px 8px; border-radius: 20px; font-size: 10px; font-weight: 600; background: var(--bg4); color: var(--text3); }
   .section-total { padding: 10px 14px; background: var(--bg3); border-top: 1px solid var(--border); font-size: 12px; display: flex; justify-content: space-between; font-weight: 600; }
   .color-swatch { width: 10px; height: 10px; border-radius: 2px; }
+ 
+  /* Nav bloqueado até mês ser selecionado */
+  .nav-item.nav-locked {
+    opacity: 0.35;
+    cursor: not-allowed;
+    pointer-events: none;
+  }
+  .sidebar-section.lancamentos-section {
+    display: none;
+  }
+  .sidebar-section.lancamentos-section.visible {
+    display: block;
+  }
+  /* Banner de "selecione um mês" no topo do mensal */
+  .mes-required-banner {
+    display: none;
+    background: rgba(201,168,76,0.08);
+    border: 1px solid rgba(201,168,76,0.3);
+    border-radius: 8px;
+    padding: 14px 18px;
+    margin-bottom: 20px;
+    color: var(--gold);
+    font-size: 13px;
+    font-weight: 600;
+    text-align: center;
+    gap: 8px;
+    align-items: center;
+    justify-content: center;
+  }
+  .mes-required-banner.show {
+    display: flex;
+  }
 </style>
 </head>
 <body>
@@ -825,15 +857,15 @@
       <span class="nav-icon">📈</span> Anual
     </div>
   </div>
-  <div class="sidebar-section">
+  <div class="sidebar-section lancamentos-section" id="lancamentosSection">
     <div class="sidebar-section-label">Lançamentos</div>
-    <div class="nav-item" onclick="showPage('vendas')" id="nav-vendas">
+    <div class="nav-item nav-locked" onclick="showPage('vendas')" id="nav-vendas">
       <span class="nav-icon">💰</span> Vendas / Receitas
     </div>
-    <div class="nav-item" onclick="showPage('alugueis')" id="nav-alugueis">
+    <div class="nav-item nav-locked" onclick="showPage('alugueis')" id="nav-alugueis">
       <span class="nav-icon">🏠</span> Aluguéis
     </div>
-    <div class="nav-item" onclick="showPage('despesas')" id="nav-despesas">
+    <div class="nav-item nav-locked" onclick="showPage('despesas')" id="nav-despesas">
       <span class="nav-icon">💸</span> Despesas
     </div>
     <div class="nav-item" onclick="showPage('relatorios')" id="nav-relatorios">
@@ -909,6 +941,9 @@
   <div class="page active" id="page-mensal">
     <div class="page-header">
       <h1>Resultado <span>do mês</span> <span id="mensalMonthLabel" style="font-size:14px;color:var(--text3);font-style:normal;font-weight:500"></span></h1>
+    </div>
+    <div class="mes-required-banner" id="mesRequiredBanner">
+      ☝️ Selecione um mês lá em cima para liberar os lançamentos
     </div>
     <div class="cards-grid" id="mensalCards"></div>
     <div class="charts-row">
@@ -1366,7 +1401,8 @@ let state = {
   data: {},
   dateFilter: { start: null, end: null, active: false },
   socioA: 'Sócio A',
-  socioB: 'Sócio B'
+  socioB: 'Sócio B',
+  monthSelected: false   // true somente após o usuário clicar num mês explicitamente
 };
  
 function getKey() { return `imob_data_${state.currentYear}`; }
@@ -1633,6 +1669,7 @@ async function doLogin() {
   buildYearSelector();
   buildMonthTabs();
   populateMesSelects();
+  updateLancamentosNav();
   renderAll();
 }
  
@@ -1703,6 +1740,7 @@ async function init() {
   buildYearSelector();
   buildMonthTabs();
   populateMesSelects();
+  updateLancamentosNav();
   renderAll();
   // Depois carrega do Supabase
   const loaded = await loadData();
@@ -1712,6 +1750,7 @@ async function init() {
     buildYearSelector();
     buildMonthTabs();
     populateMesSelects();
+    updateLancamentosNav();
     renderAll();
   }
 }
@@ -1736,19 +1775,48 @@ function buildMonthTabs() {
   const cont = document.getElementById('monthTabs');
   cont.innerHTML = '';
   MONTHS.forEach((m, i) => {
-    const isActive = i === state.currentMonth;
+    const isActive = i === state.currentMonth && state.monthSelected;
     const div = document.createElement('div');
     div.className = `month-tab${isActive?' active':''}`;
     div.textContent = m;
     div.onclick = () => {
       state.currentMonth = i;
+      state.monthSelected = true;
       clearDateFilter();
       buildMonthTabs();
       populateMesSelects();
+      updateLancamentosNav();
       renderAll();
     };
     cont.appendChild(div);
   });
+}
+ 
+// Controla visibilidade/bloqueio dos itens de Lançamentos na sidebar
+function updateLancamentosNav() {
+  const section = document.getElementById('lancamentosSection');
+  const navVendas   = document.getElementById('nav-vendas');
+  const navAlugueis = document.getElementById('nav-alugueis');
+  const navDespesas = document.getElementById('nav-despesas');
+  const banner      = document.getElementById('mesRequiredBanner');
+ 
+  // A seção de lançamentos só fica visível enquanto o usuário está no contexto mensal
+  // (ou já selecionou um mês). Fora do mensal, como em Anual, pode ficar visível mas bloqueada.
+  if (section) {
+    section.classList.add('visible');
+  }
+ 
+  const unlocked = state.monthSelected;
+  [navVendas, navAlugueis, navDespesas].forEach(el => {
+    if (!el) return;
+    el.classList.toggle('nav-locked', !unlocked);
+  });
+ 
+  // Banner só aparece na página mensal quando mês ainda não foi selecionado
+  if (banner) {
+    const onMensal = state.currentPage === 'mensal';
+    banner.classList.toggle('show', onMensal && !unlocked);
+  }
 }
  
 function populateMesSelects() {
@@ -1786,12 +1854,19 @@ function toggleTheme() {
 }
  
 function showPage(p) {
+  // Bloqueia lançamentos se mês não foi selecionado
+  if (['vendas','alugueis','despesas'].includes(p) && !state.monthSelected) {
+    toast('Selecione um mês primeiro!', 'error');
+    showPage('mensal');
+    return;
+  }
+
   // Show/hide month tabs (only relevant on mensal page)
   const tabsEl = document.getElementById('monthTabs');
   const pdfBtn = document.querySelector('.topbar-actions');
   if (tabsEl) tabsEl.style.display = p === 'mensal' ? 'flex' : 'none';
   if (pdfBtn) pdfBtn.style.display = p === 'relatorios' ? 'none' : 'flex';
- 
+
   // Pre-fill socio name fields with global names if not yet typed
   if (p === 'vendas' || p === 'alugueis') {
     ['vSocioANome','aSocioANome'].forEach(id => {
@@ -1810,6 +1885,7 @@ function showPage(p) {
   state.currentPage = p;
   const titles = {mensal:'Resumo <span>Mensal</span>',anual:'Visão <span>Anual</span>',vendas:'Registrar <span>Venda</span>',alugueis:'Registrar <span>Aluguel</span>',despesas:'Despesas <span>do mês</span>'};
   document.getElementById('topbarTitle').innerHTML = titles[p] || p;
+  updateLancamentosNav();
   closeSidebar();
   renderAll();
 }
@@ -4090,4 +4166,3 @@ init().catch(console.error);
 </script>
 </body>
 </html>
-
