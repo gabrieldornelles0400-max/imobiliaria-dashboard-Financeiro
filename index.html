@@ -2311,16 +2311,30 @@ function renderAnual() {
     let socioATotal = 0, socioBTotal = 0;
     let socioANome = getSocioA(), socioBNome = getSocioB();
  
-    // Coleta por mês — comissões brutas e despesas para dedução (50% cada)
+    // Quando filtro de período ativo, respeita as datas exatas (igual à visão mensal)
+    const _filterStart = filterActive ? state.dateFilter.start : null;
+    const _filterEnd   = filterActive ? state.dateFilter.end   : null;
+ 
+    // Coleta por mês — valA/valB já são líquidos da operação (NF e custos descontados na origem)
+    // Dedução mensal = 50% fixas + 50% variáveis APENAS (sem NF, sem custos de venda)
     const mesesData = MONTHS.map((_, mi) => {
       let a = 0, b = 0;
       (yd.vendas || []).forEach(v => {
-        if (v.mes === mi) { a += v.valA || 0; b += v.valB || 0; if (v.nomeA) socioANome = v.nomeA; if (v.nomeB) socioBNome = v.nomeB; }
+        if (v.mes === mi) {
+          // Se filtro ativo, respeita intervalo de datas
+          if (filterActive && !itemInDateFilter(v, _filterStart, _filterEnd)) return;
+          a += v.valA || 0; b += v.valB || 0;
+          if (v.nomeA) socioANome = v.nomeA; if (v.nomeB) socioBNome = v.nomeB;
+        }
       });
       (yd.alugueis || []).forEach(al => {
-        if (al.mes === mi) { a += al.valA || 0; b += al.valB || 0; if (al.nomeA) socioANome = al.nomeA; if (al.nomeB) socioBNome = al.nomeB; }
+        if (al.mes === mi) {
+          if (filterActive && !itemInDateFilter(al, _filterStart, _filterEnd)) return;
+          a += al.valA || 0; b += al.valB || 0;
+          if (al.nomeA) socioANome = al.nomeA; if (al.nomeB) socioBNome = al.nomeB;
+        }
       });
-      // Deduz 50% de fixas+variáveis APENAS (NF e custos já estão no valA/valB)
+      // Deduz 50% de fixas+variáveis APENAS (NF e custos já estão embutidos no valA/valB)
       const _tMes = calcMonthTotals(mi, curY);
       const despMes = _tMes.baseDeducaoSocios !== undefined ? _tMes.baseDeducaoSocios : (_tMes.despFixasTotal + _tMes.despVarTotal);
       const deducaoSocio = despMes / 2;
@@ -2329,7 +2343,7 @@ function renderAnual() {
       return { a: aLiq, b: bLiq, aBruto: a, bBruto: b, deducao: deducaoSocio };
     });
  
-    // Se filtro ativo, só considera meses no filtro; senão até curM
+    // Acumula totais respeitando filtro ou limite de mês atual
     mesesData.forEach((md, mi) => {
       const skip = !filterActive && mi > curM;
       if (!skip) { socioATotal += md.a; socioBTotal += md.b; }
